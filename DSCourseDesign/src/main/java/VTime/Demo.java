@@ -81,25 +81,35 @@ public class Demo {
 //        Timer timer = new Timer();
 //        timer.schedule(new TimerTaskTest(),1000L,2000L);
 
-        VirtualTime time = new VirtualTime();
-        time.TimeStart();
+        VirtualTime Vtime = new VirtualTime();
+        System.out.println(VirtualTime.getMonth());
+        System.out.println(VirtualTime.getDay());
+        System.out.println(VirtualTime.getHours());
+        System.out.println(VirtualTime.getDayOfWeek());
+//        Vtime.TimeStart();
+//
+//        Scanner scanner = new Scanner(System.in);
+//        int x = scanner.nextInt();
+//        while(true){
+//            if(x==1){
+//                System.out.println(x);
+//                System.out.println("停停停");
+//                System.out.println(Vtime.getTime());
+//                Vtime.pause();
+//            }else if(x==2){
+//                System.out.println(x);
+//                System.out.println("开始开始开始");
+//                Vtime.restart();
+//            }else if (x==3){
+//                System.out.println(x);
+//                System.out.println("快进");
+//                Vtime.FF();
+//            }
+//            x=scanner.nextInt();
+//        }
 
-        Scanner scanner = new Scanner(System.in);
-        int x = scanner.nextInt();
 
-        if(x==1){
-            System.out.println(x);
-            System.out.println("停停停");
-            System.out.println(time.getTime());
-            time.pause();
-        }
-        int y = scanner.nextInt();
 
-        if(y==2){
-            System.out.println(y);
-            System.out.println("开始开始开始");
-            time.restart();
-        }
 
 
 
