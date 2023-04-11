@@ -8,6 +8,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * 工具类：获取会话
+ * @author maxiaotiao
+ */
 public class GetSession {
     private static final String resource = "mybatis-config.xml";
     private static InputStream inputStream;

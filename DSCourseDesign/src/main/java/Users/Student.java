@@ -4,6 +4,10 @@ import Dao.GetSession;
 import mapper.StudentMapper;
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * 学生类，提供登录，查询等接口
+ * @author maxiaotiao
+ */
 public class Student {
     /**
      * 为0表示当前未登录成功

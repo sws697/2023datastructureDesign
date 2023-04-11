@@ -5,5 +5,7 @@
 <mapper namespace="mapper.StudentMapper">
 
 
-
+    <select id="select" resultType="Users.Student">
+        select * from dsdesign.student where student.id=#{id} and password=#{password}
+    </select>
 </mapper>

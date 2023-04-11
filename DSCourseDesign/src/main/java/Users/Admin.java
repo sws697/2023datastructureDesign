@@ -1,5 +1,9 @@
 package Users;
 
+/**
+ * 管理员类，目前未具体实现
+ * @author maxiaotiao
+ */
 public class Admin {
     private String username;
     private String password;
