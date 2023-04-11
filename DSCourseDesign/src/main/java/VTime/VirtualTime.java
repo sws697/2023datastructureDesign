@@ -10,7 +10,7 @@ import java.util.*;
  * @version 1.0
  */
 public class VirtualTime {
-    private static Calendar calendar = Calendar.getInstance();//用日历表示时间
+    private static final Calendar calendar = Calendar.getInstance();//用日历表示时间
     private static int rate = 10;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以

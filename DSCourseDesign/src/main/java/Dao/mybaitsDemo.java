@@ -1,7 +1,5 @@
 package Dao;
 
-import Users.user_test;
-import mapper.TestMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -25,10 +23,7 @@ public class mybaitsDemo {
 
         //执行
 //        List<user_test> users = sqlSession.selectList("test.getUsers");
-        TestMapper mapper = sqlSession.getMapper(TestMapper.class);
-        List<user_test> user_tests = mapper.selectAll();
 
-        System.out.println(user_tests);
 
         sqlSession.close();
     }
