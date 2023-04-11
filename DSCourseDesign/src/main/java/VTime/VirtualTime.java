@@ -114,8 +114,7 @@ public class VirtualTime {
     }
 
     /**
-     * 暂停时钟
-     * @throws InterruptedException
+     *  暂停时钟
      */
     public void pause() throws InterruptedException {
         timer.cancel();

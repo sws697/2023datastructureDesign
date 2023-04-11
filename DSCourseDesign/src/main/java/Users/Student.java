@@ -15,6 +15,10 @@ public class Student {
     private static long id=0L;
     private static String password="0";
 
+    /**
+     *
+     * @return 返回当前系统用户Id（学号）
+     */
     public static long getId() {
         return Student.id;
     }

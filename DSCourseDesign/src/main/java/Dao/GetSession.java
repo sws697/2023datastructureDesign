@@ -28,7 +28,7 @@ public class GetSession {
 
     /**
      *
-     * @return返回一个sql会话对象
+     * @return 返回一个sql会话对象
      */
     public static SqlSession getSesssion(){
         return sqlSessionFactory.openSession();
