@@ -82,31 +82,31 @@ public class Demo {
 //        timer.schedule(new TimerTaskTest(),1000L,2000L);
 
         VirtualTime Vtime = new VirtualTime();
-        System.out.println(VirtualTime.getMonth());
-        System.out.println(VirtualTime.getDay());
-        System.out.println(VirtualTime.getHours());
-        System.out.println(VirtualTime.getDayOfWeek());
-//        Vtime.TimeStart();
+//        System.out.println(VirtualTime.getMonth());
+//        System.out.println(VirtualTime.getDay());
+//        System.out.println(VirtualTime.getHours());
+//        System.out.println(VirtualTime.getDayOfWeek());
+        Vtime.TimeStart();
 //
-//        Scanner scanner = new Scanner(System.in);
-//        int x = scanner.nextInt();
-//        while(true){
-//            if(x==1){
+        Scanner scanner = new Scanner(System.in);
+        int x = scanner.nextInt();
+        while(true){
+            if(x==1){
 //                System.out.println(x);
-//                System.out.println("停停停");
-//                System.out.println(Vtime.getTime());
-//                Vtime.pause();
-//            }else if(x==2){
+                System.out.println("时钟暂停");
+//                System.out.println(VirtualTime.getTime());
+                Vtime.pause();
+            }else if(x==2){
 //                System.out.println(x);
-//                System.out.println("开始开始开始");
-//                Vtime.restart();
-//            }else if (x==3){
+                System.out.println("时钟恢复");
+                Vtime.restart();
+            }else if (x==3){
 //                System.out.println(x);
-//                System.out.println("快进");
-//                Vtime.FF();
-//            }
-//            x=scanner.nextInt();
-//        }
+                Vtime.FF();
+                System.out.println("时钟快进，当前速度为现实"+VirtualTime.getRate()+"秒=系统时钟1小时");
+            }
+            x=scanner.nextInt();
+        }
 
 
 

@@ -10,16 +10,17 @@ import java.util.*;
  * @version 1.0
  */
 public class VirtualTime {
-    private static Calendar calendar = Calendar.getInstance();//用日历表示时间
+    private static final Calendar calendar = Calendar.getInstance();//用日历表示时间
     private static int rate = 10;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
+
 
     /**
      * 目前的构造方法默认时间为2023.2.18，后续可能变成读取上次系统关闭时候的时间
      */
     public VirtualTime() {
-        calendar.set(2023, 1, 18, 0, 0);
+        calendar.set(2023, 2, 18, 0, 0);
     }
 
     /**
@@ -61,18 +62,17 @@ public class VirtualTime {
      *返回当前时间倍速：x秒=1h
      * @return 返回当前时间倍速：x秒=1h
      */
-    public int getRate() {
+    public  static int getRate() {
         return rate;
     }
 
 
     /**
      *
-     * @return 返回当字符串格式的完整时间
+     * @return 返回当前时间的Date对象
      */
-    public String getTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss EE");
-        return sdf.format(calendar.getTime());
+    public static Date getTime() {
+        return calendar.getTime();
 
     }
 
@@ -94,7 +94,6 @@ public class VirtualTime {
         }
     }
 
-
     /**
      *开启定时器，参数为自定义时间
      * @param year 年份
@@ -115,8 +114,7 @@ public class VirtualTime {
     }
 
     /**
-     * 暂停时钟
-     * @throws InterruptedException
+     *  暂停时钟
      */
     public void pause() throws InterruptedException {
         timer.cancel();
@@ -152,7 +150,7 @@ public class VirtualTime {
 
         timer.cancel();
         timer = new Timer();
-        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.HOUR_OF_DAY));
     }
 
