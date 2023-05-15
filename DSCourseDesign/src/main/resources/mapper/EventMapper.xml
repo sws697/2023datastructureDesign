@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.StudentMapper">
+<mapper namespace="mapper.EventMapper">
 
 
-    <select id="select" resultType="Users.Student">
-        select * from dsdesign.student where student.sid=#{id} and password=#{password}
+    <select id="getEvents" resultType="Users.tool.EventForRec">
+        select * from dsdesign.event where sid = #{student_id}
     </select>
 </mapper>

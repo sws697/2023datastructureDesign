@@ -1,12 +1,12 @@
 package Users;
 
+import Users.tool.EventForRec;
+
+import java.util.ArrayList;
+
 public class Demo {
     public static void main(String[] args) {
-        boolean login = Student.login(2021211115, "123456");
-        if(login){
-            System.out.println("登录成功");
-            System.out.println(Student.getId());
-            System.out.println(Student.getPassword());
-        }
+        ArrayList<EventForRec> events = Student.getEvents(2021211115);
+        System.out.println(events);
     }
 }
