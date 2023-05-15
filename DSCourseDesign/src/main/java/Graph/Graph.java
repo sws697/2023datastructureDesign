@@ -16,7 +16,7 @@ public class Graph {
     final int MAXE = 10240;
 
     Edge[] edge;
-    static Node[] node;
+    Node[] node;
     int n;
     int node_num;
     int edge_num;
