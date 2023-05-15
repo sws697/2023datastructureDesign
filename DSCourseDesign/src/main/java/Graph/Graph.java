@@ -16,7 +16,7 @@ public class Graph {
     final int MAXE = 10240;
 
     Edge[] edge;
-    Node[] node;
+    static Node[] node;
     int n;
     int node_num;
     int edge_num;
@@ -154,8 +154,9 @@ public class Graph {
      * 根据名称创建建筑物
      * 若node数组已满则返回-1
      */
-    public int createBuilding(String name) {
+    public int createBuilding(String name,int x,int y) {
         node[++ node_num].name = name;
+        node[node_num].setPoint(x,y);
         int ret = hashtable.add(name, node_num);
         if(ret == -1) return -1;
         else return 1;
