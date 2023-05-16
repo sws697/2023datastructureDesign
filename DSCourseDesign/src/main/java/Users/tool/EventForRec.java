@@ -2,12 +2,20 @@ package Users.tool;
 
 import java.util.Date;
 
+/**
+ * @author maxiaotiao
+ * 这个类用于接收日程，作为一个中介的作用，参数是所有的参数，每种日程根据自己需要的类获取
+ */
 public class EventForRec {
     private int id;
     private String name;
     private String location;
     private Date startTime;
     private int tag;
+
+    /**
+     *课程type = 1 ，课外活动type = 2， 临时事务type  = 3
+     */
     private int type;
     private int weekLast;
     private int hourLast;

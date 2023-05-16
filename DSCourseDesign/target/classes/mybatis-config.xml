@@ -18,5 +18,6 @@
     <mappers>
         <!--加载sql映射文件-->
         <mapper resource="mapper/StudentMapper.xml"/>
+        <mapper resource="mapper/EventMapper.xml"/>
     </mappers>
 </configuration>

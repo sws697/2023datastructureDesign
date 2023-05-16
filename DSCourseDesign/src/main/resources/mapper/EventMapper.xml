@@ -6,6 +6,6 @@
 
 
     <select id="getEvents" resultType="Users.tool.EventForRec">
-        select * from dsdesign.event where sid = #{student_id}
+        select * from dsdesign.event where sid = #{sid}
     </select>
 </mapper>

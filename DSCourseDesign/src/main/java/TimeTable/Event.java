@@ -36,4 +36,20 @@ public class Event {//事务时间戳
         son = new int [2];
         size = 1;
     }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Tempo> getTempo() {
+        return tempo;
+    }
 }

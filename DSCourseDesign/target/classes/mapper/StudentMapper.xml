@@ -6,6 +6,6 @@
 
 
     <select id="select" resultType="Users.Student">
-        select * from dsdesign.student where student.id=#{id} and password=#{password}
+        select * from dsdesign.student where student.sid=#{id} and password=#{password}
     </select>
 </mapper>

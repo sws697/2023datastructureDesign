@@ -186,14 +186,14 @@ public class Graph {
      *  若名称不合法则返回null
      *  返回ArrayList<String>, 包括起点和终点
      */
-    public ArrayList<String> shortestPath(String start, String end) {
-        ArrayList<String> a = new ArrayList<>();
+    public ArrayList<Node> shortestPath(String start, String end) {
+        ArrayList<Node> a = new ArrayList<>();
         int id1 = hashtable.get(start);
         int id2 = hashtable.get(end);
         if(id1 == -1 || id2 == -1) return null;
 
         for(int i = path[id1][id2].size() - 1; i >= 0; i --)
-            a.add(node[ path[id1][id2].get(i) ].name);
+            a.add(node[ path[id1][id2].get(i) ]);
         return a;
     }
 

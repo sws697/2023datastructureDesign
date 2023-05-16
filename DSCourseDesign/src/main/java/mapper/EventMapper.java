@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Param;
 import java.util.ArrayList;
 
 public interface EventMapper {
-    ArrayList<EventForRec> getEvents(@Param("student_id") int id);
+    ArrayList<EventForRec> getEvents(@Param("sid") int sid);
 }

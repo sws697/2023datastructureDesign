@@ -1,6 +1,11 @@
 package VTime;
 
 
+import Graph.Node;
+import TimeTable.Event;
+import Users.Student;
+
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -15,6 +20,9 @@ public class VirtualTime {
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
 
+    public static Calendar getCalendar(){
+        return calendar;
+    }
 
     /**
      * 目前的构造方法默认时间为2023.2.18，后续可能变成读取上次系统关闭时候的时间
@@ -153,6 +161,65 @@ public class VirtualTime {
         this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.HOUR_OF_DAY));
     }
+
+
+    /**
+     * 每个小时都要执行一次任务体，现在主要是课程提醒和闹钟
+     * 调用导航方面，途径最短路还没改过来，而且我需要一个能够直接调用的方法，导航功能需要在做一层封装，所以暂时不做途径最短路
+     * 这只是第一个版本，可能根据需求再改
+     *
+     */
+    public void HourlyTask(){
+        Event nextEvent = Student.CourseAdvanceRemind();
+        if(nextEvent!=null){
+            Event currentEvent = Student.getCurrentEvent();
+            if(currentEvent!=null){
+                if(currentEvent.getName().equals(nextEvent.getName())){
+                    System.out.println("同一门课的不同时间段");
+                }else{
+                    System.out.println("下一门课是"+nextEvent);
+                }
+            }else{
+                System.out.println("下一门课是"+nextEvent);
+            }
+
+        }
+
+        if(Clock.Ring()){
+            Calendar calendar = VirtualTime.getCalendar();
+            calendar.set(Calendar.HOUR_OF_DAY,VirtualTime.getHours());
+            Date startTime = calendar.getTime();
+            calendar.set(Calendar.HOUR_OF_DAY,VirtualTime.getHours()+1);
+            Date endTime = calendar.getTime();
+            ArrayList<Event> events = Student.getTimeTable().displayExtra(startTime,endTime);
+            Event event = events.get(0);
+            if(event.getType()==2){
+                System.out.println("当前课外活动为: "+event.getName());
+            }else {
+                System.out.println("当前临时事务为: "+event.getTempo());
+            }
+        }
+
+
+        if(VirtualTime.getHours()==22){
+            ArrayList<Event> events = Student.DailyExtraRemind();
+            System.out.println("明天的课外活动为：");
+            System.out.println(events);
+        }
+
+        if (VirtualTime.getHours()==23){
+            ArrayList<Event> events = Student.DailyCourseRemind();
+            System.out.println("明天的课程为：");
+            System.out.println(events);
+        }
+    }
+
+
+
+
+
+
+
 
 
 
