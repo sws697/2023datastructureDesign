@@ -5,5 +5,23 @@
 <mapper namespace="mapper.AdminMapper">
 
 
+    <insert id="addStu">
+        insert into dsdesign.student (password, sid, location) VALUES (#{password},#{sid},#{location})
+    </insert>
 
+    <insert id="addCourse">
+        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid})
+    </insert>
+
+    <update id="updateCourseLocation">
+        update event set location =#{Location} where name =#{name}
+    </update>
+
+    <update id="updateCourseStartTime">
+        update event set startTime =#{startTime} where name =#{name}
+    </update>
+
+    <delete id="removeCourse">
+        delete from event where sid=#{sid} and name=#{name}
+    </delete>
 </mapper>

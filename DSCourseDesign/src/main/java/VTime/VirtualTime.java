@@ -11,6 +11,7 @@ import java.util.*;
 
 /**
  * 模拟时间
+ *
  * @author maxiaotiao
  * @version 1.0
  */
@@ -19,8 +20,9 @@ public class VirtualTime {
     private static int rate = 10;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
+    boolean isDo = false;
 
-    public static Calendar getCalendar(){
+    public static Calendar getCalendar() {
         return calendar;
     }
 
@@ -32,7 +34,8 @@ public class VirtualTime {
     }
 
     /**
-     *返回当前月份
+     * 返回当前月份
+     *
      * @return 返回当前月份
      */
     public static int getMonth() {
@@ -40,7 +43,8 @@ public class VirtualTime {
     }
 
     /**
-     *返回当前日期
+     * 返回当前日期
+     *
      * @return 返回当前日期
      */
     public static int getDay() {
@@ -48,7 +52,8 @@ public class VirtualTime {
     }
 
     /**
-     *返回当前时间（小时）
+     * 返回当前时间（小时）
+     *
      * @return 返回当前时间（小时）
      */
     public static int getHours() {
@@ -56,7 +61,8 @@ public class VirtualTime {
     }
 
     /**
-     *返回当前是星期几
+     * 返回当前是星期几
+     *
      * @return 返回当前是星期几
      */
     public static int getDayOfWeek() {
@@ -67,16 +73,16 @@ public class VirtualTime {
     }
 
     /**
-     *返回当前时间倍速：x秒=1h
+     * 返回当前时间倍速：x秒=1h
+     *
      * @return 返回当前时间倍速：x秒=1h
      */
-    public  static int getRate() {
+    public static int getRate() {
         return rate;
     }
 
 
     /**
-     *
      * @return 返回当前时间的Date对象
      */
     public static Date getTime() {
@@ -86,7 +92,7 @@ public class VirtualTime {
 
 
     /**
-     *定时器内容，后续放定时任务
+     * 定时器内容，后续放定时任务
      */
     class MyTimerTask extends TimerTask {
         @Override
@@ -96,6 +102,9 @@ public class VirtualTime {
             calendar.add(Calendar.HOUR_OF_DAY, 1);//时间推进
 
             //模拟执行任务区
+
+            HourlyTask();
+
             System.out.println(getTime() + "   执行任务，循环第" + count++ + "次");
 
 
@@ -103,11 +112,12 @@ public class VirtualTime {
     }
 
     /**
-     *开启定时器，参数为自定义时间
-     * @param year 年份
+     * 开启定时器，参数为自定义时间
+     *
+     * @param year  年份
      * @param month 月份
-     * @param day 日期
-     * @param hour 小时
+     * @param day   日期
+     * @param hour  小时
      */
     public void TimeStart(int year, int month, int day, int hour) {
         calendar.set(year, month - 1, day, hour, 0, 0);
@@ -122,7 +132,7 @@ public class VirtualTime {
     }
 
     /**
-     *  暂停时钟
+     * 暂停时钟
      */
     public void pause() throws InterruptedException {
         timer.cancel();
@@ -158,7 +168,7 @@ public class VirtualTime {
 
         timer.cancel();
         timer = new Timer();
-        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH),
+        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -167,62 +177,51 @@ public class VirtualTime {
      * 每个小时都要执行一次任务体，现在主要是课程提醒和闹钟
      * 调用导航方面，途径最短路还没改过来，而且我需要一个能够直接调用的方法，导航功能需要在做一层封装，所以暂时不做途径最短路
      * 这只是第一个版本，可能根据需求再改
-     *
      */
-    public void HourlyTask(){
+    public void HourlyTask() {
         Event nextEvent = Student.CourseAdvanceRemind();
-        if(nextEvent!=null){
+        if (nextEvent != null) {
             Event currentEvent = Student.getCurrentEvent();
-            if(currentEvent!=null){
-                if(currentEvent.getName().equals(nextEvent.getName())){
+            if (currentEvent != null) {
+                if (currentEvent.getName().equals(nextEvent.getName())) {
                     System.out.println("同一门课的不同时间段");
-                }else{
-                    System.out.println("下一门课是"+nextEvent);
+                } else {
+                    System.out.println("下一门课是" + nextEvent);
                 }
-            }else{
-                System.out.println("下一门课是"+nextEvent);
+            } else {
+                System.out.println("下一门课是" + nextEvent);
             }
 
         }
 
-        if(Clock.Ring()){
+        if (Clock.Ring()) {
             Calendar calendar = VirtualTime.getCalendar();
-            calendar.set(Calendar.HOUR_OF_DAY,VirtualTime.getHours());
+            calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours());
             Date startTime = calendar.getTime();
-            calendar.set(Calendar.HOUR_OF_DAY,VirtualTime.getHours()+1);
+            calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 1);
             Date endTime = calendar.getTime();
-            ArrayList<Event> events = Student.getTimeTable().displayExtra(startTime,endTime);
+            ArrayList<Event> events = Student.getTimeTable().displayExtra(startTime, endTime);
             Event event = events.get(0);
-            if(event.getType()==2){
-                System.out.println("当前课外活动为: "+event.getName());
-            }else {
-                System.out.println("当前临时事务为: "+event.getTempo());
+            if (event.getType() == 2) {
+                System.out.println("当前课外活动为: " + event.getName());
+            } else {
+                System.out.println("当前临时事务为: " + event.getTempo());
             }
         }
 
 
-        if(VirtualTime.getHours()==22){
+        if (VirtualTime.getHours() == 22) {
             ArrayList<Event> events = Student.DailyExtraRemind();
             System.out.println("明天的课外活动为：");
             System.out.println(events);
         }
 
-        if (VirtualTime.getHours()==23){
+        if (VirtualTime.getHours() == 23) {
             ArrayList<Event> events = Student.DailyCourseRemind();
             System.out.println("明天的课程为：");
             System.out.println(events);
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }
