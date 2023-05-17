@@ -5,8 +5,8 @@ package Users;
  * @author maxiaotiao
  */
 public class Admin {
-    private String username;
-    private String password;
+    private String username="admin";
+    private String password="admin";
 
     public String getUsername() {
         return username;
@@ -31,4 +31,16 @@ public class Admin {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public boolean login(String username,String password){
+        if(this.username.equals(username)&this.password.equals(password)){
+            return true;
+        }
+        else return false;
+    }
+
+    public void addStu(int sid,String password,String location){
+
+    }
+
 }

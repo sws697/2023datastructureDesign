@@ -154,8 +154,9 @@ public class Graph {
      * 根据名称创建建筑物
      * 若node数组已满则返回-1
      */
-    public int createBuilding(String name) {
+    public int createBuilding(String name,int x,int y) {
         node[++ node_num].name = name;
+        node[node_num].setPoint(x,y);
         int ret = hashtable.add(name, node_num);
         if(ret == -1) return -1;
         else return 1;
@@ -185,14 +186,14 @@ public class Graph {
      *  若名称不合法则返回null
      *  返回ArrayList<String>, 包括起点和终点
      */
-    public ArrayList<String> shortestPath(String start, String end) {
-        ArrayList<String> a = new ArrayList<>();
+    public ArrayList<Node> shortestPath(String start, String end) {
+        ArrayList<Node> a = new ArrayList<>();
         int id1 = hashtable.get(start);
         int id2 = hashtable.get(end);
         if(id1 == -1 || id2 == -1) return null;
 
         for(int i = path[id1][id2].size() - 1; i >= 0; i --)
-            a.add(node[ path[id1][id2].get(i) ].name);
+            a.add(node[ path[id1][id2].get(i) ]);
         return a;
     }
 
