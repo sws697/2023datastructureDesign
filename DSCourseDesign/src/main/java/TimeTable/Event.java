@@ -8,6 +8,7 @@ public class Event {//事务时间戳
     ArrayList<Tempo> tempo;//由于同一个时间戳可存在多个临时事务, 故选择用ArrayList来存储临时事务
     Date time;//时间戳
     String location;//课程地点名称
+    String link;//线上活动链接
     /** type:
      *  课程 or 课外活动 or 临时事务
      */
@@ -30,19 +31,13 @@ public class Event {//事务时间戳
         name = new String();
         time = new Date();
         location = new String();
+        link = new String();
         type = 0;
         tag = 0;
+
         fa = 0;
         son = new int [2];
         size = 1;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public int getType() {
-        return type;
     }
 
     public String getName() {
@@ -51,5 +46,25 @@ public class Event {//事务时间戳
 
     public ArrayList<Tempo> getTempo() {
         return tempo;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public int getType() {
+        return  type;
+    }
+
+    public int getTag() {
+        return tag;
     }
 }
