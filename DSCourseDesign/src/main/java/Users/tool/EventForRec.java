@@ -19,6 +19,30 @@ public class EventForRec {
     private int type;
     private int weekLast;
     private int hourLast;
+    private String link;
+
+    @Override
+    public String toString() {
+        return "EventForRec{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", startTime=" + startTime +
+                ", tag=" + tag +
+                ", type=" + type +
+                ", weekLast=" + weekLast +
+                ", hourLast=" + hourLast +
+                ", link='" + link + '\'' +
+                '}';
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
 
     public int getId() {
         return id;
@@ -84,17 +108,5 @@ public class EventForRec {
         this.hourLast = hourLast;
     }
 
-    @Override
-    public String toString() {
-        return "EventForRec{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", startTime=" + startTime +
-                ", tag=" + tag +
-                ", type=" + type +
-                ", weekLast=" + weekLast +
-                ", hourLast=" + hourLast +
-                '}';
-    }
+
 }

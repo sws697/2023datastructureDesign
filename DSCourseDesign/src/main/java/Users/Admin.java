@@ -1,5 +1,13 @@
 package Users;
 
+import Dao.GetSession;
+import javafx.scene.input.GestureEvent;
+import mapper.AdminMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.SqlSession;
+
+import java.util.Date;
+
 /**
  * 管理员类，目前未具体实现
  * @author maxiaotiao
@@ -40,7 +48,48 @@ public class Admin {
     }
 
     public void addStu(int sid,String password,String location){
-
+        SqlSession session = GetSession.getSesssion();
+        AdminMapper mapper  = session.getMapper(AdminMapper.class);
+        mapper.addStu(sid,password,location);
+        session.close();
     }
+
+    public void addCourse(String name, String lcoation,
+                          Date startTime,int tag,
+                          int type,int weekLast,int hourLast,
+                          int sid,String link){
+        SqlSession session = GetSession.getSesssion();
+        AdminMapper mapper = session.getMapper(AdminMapper.class);
+        mapper.addCourse(name,lcoation,startTime,tag,type,weekLast,hourLast,sid,link);
+        session.close();
+    }
+
+    public void removeCourse(String name,int sid){
+        SqlSession session = GetSession.getSesssion();
+        AdminMapper mapper = session.getMapper(AdminMapper.class);
+        mapper.removeCourse(name,sid);
+        session.close();
+    }
+
+    public void updateCourseLocation(String name,String Location){
+        SqlSession sesssion = GetSession.getSesssion();
+        AdminMapper mapper = sesssion.getMapper(AdminMapper.class);
+        mapper.updateCourseLocation(name,Location);
+        sesssion.close();
+    }
+
+    public void updateCourseStartTime(String name, Date startTime){
+        SqlSession sesssion = GetSession.getSesssion();
+        AdminMapper mapper = sesssion.getMapper(AdminMapper.class);
+        mapper.updateCourseStartTime(name,startTime);
+        sesssion.close();
+    }
+
+
+
+
+
+
+
 
 }

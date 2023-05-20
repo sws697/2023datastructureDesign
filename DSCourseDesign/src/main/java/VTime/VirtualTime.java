@@ -16,7 +16,7 @@ import java.util.*;
  * @version 1.0
  */
 public class VirtualTime {
-    private static final Calendar calendar = Calendar.getInstance();//用日历表示时间
+    private static  Calendar calendar = Calendar.getInstance();//用日历表示时间
     private static int rate = 10;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
@@ -30,7 +30,7 @@ public class VirtualTime {
      * 目前的构造方法默认时间为2023.2.18，后续可能变成读取上次系统关闭时候的时间
      */
     public VirtualTime() {
-        calendar.set(2023, 2, 18, 0, 0);
+        calendar.set(2023, Calendar.FEBRUARY, 18, 0, 0);
     }
 
     /**
@@ -105,7 +105,7 @@ public class VirtualTime {
 
             HourlyTask();
 
-            System.out.println(getTime() + "   执行任务，循环第" + count++ + "次");
+//            System.out.println(getTime() + "   执行任务，循环第" + count++ + "次");
 
 
         }
@@ -222,6 +222,8 @@ public class VirtualTime {
             System.out.println(events);
         }
     }
+
+
 
 
 }

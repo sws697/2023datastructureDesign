@@ -4,22 +4,20 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.StudentMapper">
     <insert id="addExtra">
-        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid})
+        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid,link) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid},#{link})
     </insert>
     <insert id="addTempo">
-        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid})
+        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid,link) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid},#{link})
     </insert>
-    <update id="updateExtraLocation">
-        update event set location =#{Location} where name =#{name} and sid =#{sid} and type = 2
+
+    <update id="updateExtra">
+        update event
+        set name = #{name},Location = #{Location},link = #{link},tag=#{tag}
+        where startTime = #{startTime} and type = 2;
     </update>
-    <update id="updateTempoLocation">
-        update event set location =#{Location} where name =#{name} and sid =#{sid} and type = 3
-    </update>
-    <update id="updateExtraStartTime">
-        update event set startTime =#{startTime} where name =#{name} and sid =#{sid} and type = 2
-    </update>
-    <update id="updateTempoStartTime">
-        update event set startTime =#{startTime} where name =#{name} and sid =#{sid} and type = 3
+    <update id="updateTempo">
+        update event
+        set name = #{newName},Location = #{Location} where startTime = #{startTime} and type=3 and name=#{oldname}
     </update>
     <delete id="deleteTempo">
         delete from event where sid=#{sid} and name=#{name} and type = 3

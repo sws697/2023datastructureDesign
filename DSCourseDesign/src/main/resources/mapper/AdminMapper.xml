@@ -10,7 +10,7 @@
     </insert>
 
     <insert id="addCourse">
-        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid})
+        insert into dsdesign.event(name, location, startTime, tag, type, weekLast, hourLast, sid,link) VALUES (#{name},#{location},#{startTime},#{tag},#{type},#{weekLast},#{hourLast},#{sid},#{link})
     </insert>
 
     <update id="updateCourseLocation">
