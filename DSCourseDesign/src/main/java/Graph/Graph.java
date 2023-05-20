@@ -154,9 +154,8 @@ public class Graph {
      * 根据名称创建建筑物
      * 若node数组已满则返回-1
      */
-    public int createBuilding(String name,int x,int y) {
+    public int createBuilding(String name) {
         node[++ node_num].name = name;
-        node[node_num].setPoint(x,y);
         int ret = hashtable.add(name, node_num);
         if(ret == -1) return -1;
         else return 1;
@@ -230,7 +229,7 @@ public class Graph {
      * start是起点, passBy为需要中途路过的建筑物集合, 最后回到start
      * 返回ArrayList<String>, 包括起点和终点
      */
-    public ArrayList<String> pathByTheWay(String start, ArrayList<String> passBy) {
+    public ArrayList<Node> pathByTheWay(String start, ArrayList<String> passBy) {
         int id = hashtable.get(start);
         if(id == -1) return null;
 
@@ -280,20 +279,20 @@ public class Graph {
                 minx = f[(int) Math.pow(2, a.size()) - 1][i] + distance[i][id];
             }
         }
-        ArrayList<String> ans1 = new ArrayList<>();
-        ans1.add(start);
+        ArrayList<Node> ans1 = new ArrayList<>();
+        ans1.add( node[hashtable.get(start)] );
 
         int state = (int)Math.pow(2, a.size() - 1);
         int u = end;
         while(state != 1) {
-            ans1.add( node[u].name );
+            ans1.add( node[u] );
             int t = u;
             u = last[state][u];
             state = setBit(state, mapping[t], 0);
         }
-        ans1.add( start );
+        ans1.add( node[hashtable.get(start)] );
 
-        ArrayList<String> ans2 = new ArrayList<>();
+        ArrayList<Node> ans2 = new ArrayList<>();
         for(int i = ans1.size() - 1; i >= 0; -- i)
             ans2.add(ans1.get(i));
 

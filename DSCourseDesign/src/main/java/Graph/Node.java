@@ -11,6 +11,8 @@ public class Node {
     int y;
     public Node() {
         name = new String();
+        x = 0;
+        y = 0;
     }
 
     public String getName() {

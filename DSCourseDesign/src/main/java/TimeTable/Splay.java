@@ -31,8 +31,8 @@ public class Splay {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, -1);
         Date date = cal.getTime();
-        insert(null , date, null, 0, 0);//插入负无穷时间戳
-        insert(null , endTime, null, 0, 0);//插入正无穷时间戳
+        insert(null , date, null, null, 0, 0);//插入负无穷时间戳
+        insert(null , endTime, null, null, 0, 0);//插入正无穷时间戳
     }
 
     void pushup(int u) {//更新子树大小
@@ -144,11 +144,12 @@ public class Splay {
      * @param name 名称
      * @param time 时间
      * @param location 地点
+     * @param link 链接
      * @param type 课程 or 课外 or 临时
      * @param tag 类型(临时事务没有类型, 默认为0)
      * @return 插入成功返回1, 失败返回-1
      */
-    int insert(String name, Date time, String location, int type, int tag) {
+    int insert(String name, Date time, String location, String link, int type, int tag) {
         if(find(time) != -1) return -1;//该时间戳已被占用, 插入失败
         if(size == MAX) return -1;//平衡树已满, 插入失败
 
@@ -158,6 +159,7 @@ public class Splay {
             node[u].name = name;
             node[u].time = time;
             node[u].location = location;
+            node[u].link = link;
             node[u].type = type;
             node[u].tag = tag;
 
@@ -187,6 +189,7 @@ public class Splay {
         node[u].name = name;
         node[u].time = time;
         node[u].location = location;
+        node[u].link = link;
         node[u].type = type;
         node[u].tag = tag;
 

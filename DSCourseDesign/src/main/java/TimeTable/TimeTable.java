@@ -23,10 +23,11 @@ public class TimeTable {
      * 若有其他课外活动临时事务则覆盖
      * 若平衡树满则停止加入, 并返回-1
      */
-    public int addCourse(String name, Date startTime, int hourLast, int weekLast, String location, int tag) {
+    public int addCourse(String name, Date startTime, int hourLast, int weekLast, String location, String link, int tag) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
         int cnt1 = weekLast;
+        int ret = 1;
 
         while(cnt1 != 0) {
             Date date = cal.getTime();
@@ -36,12 +37,14 @@ public class TimeTable {
                 Date temp = cal.getTime();
 
                 int id = splay.find(temp);
-                if(id != -1)//该时间戳有其他日程
-                    if(splay.node[id].type != COURSE)//不是其他课程, 可以占用
+                if(id != -1) {//该时间戳有其他日程
+                    if (splay.node[id].type != COURSE)//不是其他课程, 可以占用
                         splay.remove(temp);
+                    ret = -1;
+                }
 
-                int ret = splay.insert(name, temp, location, COURSE, tag);//若该时间点有其他课程则不会插入
-                if(ret == -1) return -1;//平衡树已满, 插入失败
+                int ret2 = splay.insert(name, temp, location, link, COURSE, tag);//若该时间点有其他课程则不会插入
+                if(ret2 == -1) ret = ret2;
                 cal.add(Calendar.HOUR_OF_DAY, 1);
                 cnt2 --;
             }
@@ -50,7 +53,7 @@ public class TimeTable {
             cal.add(Calendar.DATE, 7);
             cnt1 --;
         }
-        return 1;
+        return ret;
     }
 
     /** 批量加入
@@ -58,25 +61,28 @@ public class TimeTable {
      * 若有其他临时事务则覆盖
      * 若平衡树满则停止加入, 并返回-1
      */
-    public int addExtra(String name, Date startTime, int weekLast, String location, int tag) {
+    public int addExtra(String name, Date startTime, int weekLast, String location, String link, int tag) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
         int cnt1 = weekLast;
+        int ret = 1;
 
         while(cnt1 != 0) {
             Date temp = cal.getTime();
 
             int id = splay.find(temp);
-            if(id != -1)//该时间戳有其他日程
-                if(splay.node[id].type == TEMPO)//是临时事务, 可以占用
+            if(id != -1) {//该时间戳有其他日程
+                if (splay.node[id].type == TEMPO)//是临时事务, 可以占用
                     splay.remove(temp);
+                ret = -1;
+            }
 
-            int ret = splay.insert(name, temp, location, EXTRA, tag);
-            if(ret == -1) return -1;
+            int ret2 = splay.insert(name, temp, location, link, EXTRA, tag);
+            if(ret2 == -1) ret = ret2;
             cal.add(Calendar.DATE, 7);
             cnt1 --;
         }
-        return 1;
+        return ret;
     }
 
     /** 单点加入
@@ -221,7 +227,7 @@ public class TimeTable {
     /**
      * 修改时间戳为time的课程的名称, 地点, 类型
      */
-    public void updateCourse(Date time, String newName, String newLocation, int newTag) {
+    public void updateCourse(Date time, String newName, String newLocation, String newLink, int newTag) {
         Event event = splay.search(time);
         if(event == null) return;//还有冲突问题
         if(event.type != COURSE) return;
@@ -229,8 +235,10 @@ public class TimeTable {
         if(newName != null)
             event.name = newName;
 
-        if(newLocation != null)
+        if(newLocation != null || newLink != null) {//如果两个有一个不为null, 说明需要修改
             event.location = newLocation;
+            event.link = newLink;
+        }
 
         if(newTag != 0)
             event.tag = newTag;
@@ -239,7 +247,7 @@ public class TimeTable {
     /**
      * 修改时间戳为time的课外活动的名称, 地点, 类型
      */
-    public void updateExtra(Date time, String newName, String newLocation, int newTag) {
+    public void updateExtra(Date time, String newName, String newLocation, String newLink, int newTag) {
         Event event = splay.search(time);
         if(event == null) return;
         if(event.type != EXTRA) return;
@@ -247,8 +255,10 @@ public class TimeTable {
         if(newName != null)
             event.name = newName;
 
-        if(newLocation != null)
+        if(newLocation != null || newLink != null) {//如果两个有一个不为null, 说明需要修改
             event.location = newLocation;
+            event.link = newLink;
+        }
 
         if(newTag != 0)
             event.tag = newTag;
@@ -444,16 +454,33 @@ public class TimeTable {
         return a;
     }
 
-    public static void main(String[] args) {
+    /**
+     * 查询时间空闲状态，若该小时空闲，返回true; 否则返回false
+     * @param time
+     * @return
+     */
+    public boolean available(Date time) {
+        if(splay.find(time) == -1) return true;
+        else return false;
+    }
 
-        Date a = new Date();
-        System.out.println(a);
-
+    public ArrayList<Date> searchAvailable(Date time) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(a);
+        cal.setTime(time);
 
-        cal.add(Calendar.HOUR_OF_DAY, 10);
-        a = cal.getTime();
-        System.out.println(a);
+        cal.add(Calendar.HOUR_OF_DAY, -time.getHours() + 6);
+        ArrayList<Date> a = new ArrayList<>();
+        int cnt1 = 0, cnt2 = 6;
+
+        while(cnt1 < 3 && cnt2 < 22) {
+            cnt2 ++;
+            if(cal.getTime() == time) continue;
+            if(!available(cal.getTime())) continue;
+
+            cnt1 ++;
+            a.add(cal.getTime());
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+        }
+        return a;
     }
 }
