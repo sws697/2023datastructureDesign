@@ -227,10 +227,10 @@ public class TimeTable {
     /**
      * 修改时间戳为time的课程的名称, 地点, 类型
      */
-    public void updateCourse(Date time, String newName, String newLocation, String newLink, int newTag) {
+    public int updateCourse(Date time, String newName, String newLocation, String newLink, int newTag) {
         Event event = splay.search(time);
-        if(event == null) return;//还有冲突问题
-        if(event.type != COURSE) return;
+        if(event == null) return -1;//还有冲突问题
+        if(event.type != COURSE) return -1;
 
         if(newName != null)
             event.name = newName;
@@ -242,15 +242,16 @@ public class TimeTable {
 
         if(newTag != 0)
             event.tag = newTag;
+        return 1;
     }
 
     /**
      * 修改时间戳为time的课外活动的名称, 地点, 类型
      */
-    public void updateExtra(Date time, String newName, String newLocation, String newLink, int newTag) {
+    public int updateExtra(Date time, String newName, String newLocation, String newLink, int newTag) {
         Event event = splay.search(time);
-        if(event == null) return;
-        if(event.type != EXTRA) return;
+        if(event == null) return -1;
+        if(event.type != EXTRA) return -1;
 
         if(newName != null)
             event.name = newName;
@@ -262,23 +263,27 @@ public class TimeTable {
 
         if(newTag != 0)
             event.tag = newTag;
+        return 1;
     }
 
     /**
      * 修改时间戳为time, 名称为oldName的临时事务的 名称, 地点, 类型
      */
-    public void updateTempo(Date time, String oldName, String newName, String newLocation) {
+    public int updateTempo(Date time, String oldName, String newName, String newLocation) {
         Event event = splay.search(time);
-        if(event == null) return;
-        if(event.type != TEMPO) return;
+        if(event == null) return -1;
+        if(event.type != TEMPO) return -1;
 
+        int ret = -1;
         for(int i = 0; i < event.tempo.size(); ++ i)
             if( oldName.equals(event.tempo.get(i).name) ) {
                 event.tempo.get(i).name = newName;
                 event.tempo.get(i).location = newLocation;
+                ret = 1;
                 break;
             }
 
+        return ret;
     }
 
     /**
@@ -482,5 +487,8 @@ public class TimeTable {
             cal.add(Calendar.HOUR_OF_DAY, 1);
         }
         return a;
+    }
+
+    public static void main(String[] args) {
     }
 }
