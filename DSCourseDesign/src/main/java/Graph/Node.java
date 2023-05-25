@@ -10,7 +10,7 @@ public class Node {
     int x;
     int y;
     public Node() {
-        name = new String();
+        name = null;
         x = 0;
         y = 0;
     }

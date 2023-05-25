@@ -43,7 +43,7 @@ public class Student {
     /**
      * @return 返回当前系统用户Id（学号）
      */
-    public static long getSid() {
+    public static int getSid() {
         return Student.sid;
     }
 
@@ -171,12 +171,15 @@ public class Student {
         calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 4);
         Date endTime = calendar.getTime();
         ArrayList<Event> events = timeTable.displayCourse(startTime, endTime);
-        Event event = events.get(0);
-        if (event.getTime().equals(startTime)) {
-            return event;
-        } else {
-            return null;
+        if (events.size() != 0){
+            Event event = events.get(0);
+            if (event.getTime().equals(startTime)) {
+                return event;
+            } else {
+                return null;
+            }
         }
+        return null;
     }
 
     /**
@@ -296,4 +299,13 @@ public class Student {
     }
 
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

@@ -26,9 +26,10 @@ public class Splay {
         indexOccupy = new boolean[MAX + 5];
         indexOccupy[0] = true;
         node = new Event[MAX + 5];
-        for(Event elem:  node) elem = new Event();
+        for(int i = 0; i <= MAX; ++i) node[i] = new Event();
 
         Calendar cal = Calendar.getInstance();
+        cal.setTime(startTime);
         cal.add(Calendar.HOUR_OF_DAY, -1);
         Date date = cal.getTime();
         insert(null , date, null, null, 0, 0);//插入负无穷时间戳
@@ -276,10 +277,32 @@ public class Splay {
      */
     int pre(Date time) {
         int u = find(time);
-        splay(u, 0);
-        u = node[u].son[0];
-        while(node[u].son[1] != 0) u = node[u].son[1];
-        return u;
+        if(u == -1) {
+            u = root;
+            while(node[u].time.getTime() != time.getTime()) {
+                if(node[u].time.getTime() > time.getTime()) {//往左儿子走
+                    if (node[u].son[0] != 0) //左儿子存在
+                        u = node[u].son[0];
+                    else break;//不存在, 说明没有
+                }
+                else {//否则往右儿子走
+                    if (node[u].son[1] != 0)
+                        u = node[u].son[1];
+                    else break;
+                }
+            }
+            if(node[u].time.getTime() < time.getTime()) return u;
+            splay(u, 0);
+            u = node[u].son[0];
+            while(node[u].son[1] != 0) u = node[u].son[1];
+            return u;
+        }
+        else {
+            splay(u, 0);
+            u = node[u].son[0];
+            while (node[u].son[1] != 0) u = node[u].son[1];
+            return u;
+        }
     }
 
     /**
@@ -289,11 +312,34 @@ public class Splay {
      */
     int nex(Date time) {
         int u = find(time);
-        splay(u, 0);
-        u = node[u].son[1];
-        while(node[u].son[0] != 0) u = node[u].son[0];
-        return u;
+        if(u == -1) {
+            u = root;
+            while(node[u].time.getTime() != time.getTime()) {
+                if(node[u].time.getTime() > time.getTime()) {//往左儿子走
+                    if (node[u].son[0] != 0) //左儿子存在
+                        u = node[u].son[0];
+                    else break;//不存在, 说明没有
+                }
+                else {//否则往右儿子走
+                    if (node[u].son[1] != 0)
+                        u = node[u].son[1];
+                    else break;
+                }
+            }
+            if(node[u].time.getTime() > time.getTime()) return u;
+            splay(u, 0);
+            u = node[u].son[1];
+            while(node[u].son[0] != 0) u = node[u].son[0];
+            return u;
+        }
+        else {
+            splay(u, 0);
+            u = node[u].son[1];
+            while (node[u].son[0] != 0) u = node[u].son[0];
+            return u;
+        }
     }
+
 
     /**
      * 删去时间戳为time的日程结点
@@ -328,10 +374,11 @@ public class Splay {
         int id1 = find(startTime);
         if (id1 == -1) id1 = pre(startTime);
 
-        int id2 = find(startTime);
+        int id2 = find(endTime);
         if (id2 == -1) id2 = nex(endTime);
 
-        splay(id1, id2);
+        splay(id1, 0);
+        splay(id2, id1);
 
         int u = root;
         u = node[u].son[1];

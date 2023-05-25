@@ -1,7 +1,6 @@
 package Users;
 
 import Dao.GetSession;
-import javafx.scene.input.GestureEvent;
 import mapper.AdminMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;

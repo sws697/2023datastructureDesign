@@ -35,15 +35,15 @@ public class Graph {
         edge_num = 0;
 
         node = new Node[MAX + 5];
-        for(Node elem: node) elem = new Node();
+        for(int i = 0; i <= MAX; ++ i) node[i] = new Node();
 
         edge = new Edge[MAXE + 5];
-        for(Edge elem: edge) elem = new Edge();
+        for(int i = 0; i <= MAXE; ++ i) edge[i] = new Edge();
 
         head = new int[MAX + 5];
 
         distance = new int[MAX + 5][MAX + 5];
-        dis = new int[MAX];
+        dis = new int[MAX + 5];
         for(int i = 0; i <= MAX; ++ i) dis[i]= Integer.MAX_VALUE;
 
         ArrayList<Integer>[][] path = new ArrayList[MAX + 5][MAX + 5];

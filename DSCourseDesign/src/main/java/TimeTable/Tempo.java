@@ -4,8 +4,8 @@
 package TimeTable;
 
 public class Tempo {
-    String name;
-    String location;
+    public String name;
+    public String location;
 
     public Tempo() {
         name = new String();

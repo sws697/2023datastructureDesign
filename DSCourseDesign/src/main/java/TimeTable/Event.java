@@ -16,7 +16,7 @@ public class Event {//事务时间戳
 
     /** tag:
      * 课程: 上课 or 考试
-     * 课外活动: 集体活动 or 个人活动
+     * 课外活动: 个人活动 or 集体活动
      */
     int tag;
 

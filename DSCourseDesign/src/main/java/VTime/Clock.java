@@ -75,7 +75,7 @@ public class Clock {
                         Date date = new Date(millSecond+(long)86400000);
                         clock.setStartTime(date);
                         Clocks.put(millSecond+(long)86400000,clock);
-                    }else if (clock.getType()==3){
+                    }else if (clock.getPeriod()==3){
                         Date date = new Date(millSecond+(long)604800000);
                         clock.setStartTime(date);
                         Clocks.put(millSecond+(long)604800000,clock);
@@ -83,10 +83,9 @@ public class Clock {
             }
             return true;
         }
-    }
+    }/*这个Ring函数好像如果设置Clock为周期那么他会无限延续下去。那如果我要设置指定一段时间的周期闹钟怎么办？*/
 
     public static void addClock(Event event,int period){
-
         switch (event.getType()){
             case 2:
                 Clock clock = new Clock(2,event.getTime(),period);
@@ -98,6 +97,4 @@ public class Clock {
                 break;
         }
     }
-
-
 }
