@@ -14,7 +14,11 @@ public class TimeTable {
     final static int TEMPO = 3;
 
     Splay splay;
+    Date startTime;
+    Date endTime;
     public TimeTable(Date startTime, Date endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
         splay = new Splay(startTime, endTime);
     }
 
@@ -35,6 +39,12 @@ public class TimeTable {
             int cnt2 = hourLast;
             while(cnt2 != 0) {
                 Date temp = cal.getTime();
+                cal.add(Calendar.HOUR_OF_DAY, 1);
+                cnt2 --;
+                if(temp.getTime() < startTime.getTime() || temp.getTime() >= endTime.getTime()) {
+                    ret = -1;
+                    continue;
+                }
 
                 int id = splay.find(temp);
                 if(id != -1) {//该时间戳有其他日程
@@ -45,8 +55,6 @@ public class TimeTable {
 
                 int ret2 = splay.insert(name, temp, location, link, COURSE, tag);//若该时间点有其他课程则不会插入
                 if(ret2 == -1) ret = ret2;
-                cal.add(Calendar.HOUR_OF_DAY, 1);
-                cnt2 --;
             }
 
             cal.setTime(date);
@@ -69,6 +77,12 @@ public class TimeTable {
 
         while(cnt1 != 0) {
             Date temp = cal.getTime();
+            cal.add(Calendar.DATE, 7);
+            cnt1 --;
+            if(temp.getTime() < startTime.getTime() || temp.getTime() >= endTime.getTime()) {
+                ret = -1;
+                continue;
+            }
 
             int id = splay.find(temp);
             if(id != -1) {//该时间戳有其他日程
@@ -79,8 +93,6 @@ public class TimeTable {
 
             int ret2 = splay.insert(name, temp, location, link, EXTRA, tag);
             if(ret2 == -1) ret = ret2;
-            cal.add(Calendar.DATE, 7);
-            cnt1 --;
         }
         return ret;
     }
@@ -91,6 +103,8 @@ public class TimeTable {
      * 若平衡树满则停止加入, 并返回-1
      */
     public int addTempo(String name, Date time, String location) {
+        if(time.getTime() < startTime.getTime() || time.getTime() >= endTime.getTime())
+            return -1;
         int ret = splay.insertTempo(name, time, location);
         if(ret == -1) return -1;
         return 1;
@@ -99,88 +113,140 @@ public class TimeTable {
     /** 批量删除
      * 删除从startTime开始到endTime为止的 所有名为name的课程
      */
-    public void removeCourse(String name, Date startTime, Date endTime) {
+    public int removeCourse(String name, Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
             if(event == null) continue;
 
             if( name.equals( event.name ) && event.type == COURSE)
                 splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      * 删除从startTime开始到endTime为止的 所有课程
      */
-    public void clearCourse(Date startTime, Date endTime) {
+    public int clearCourse(Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
             if(event == null) continue;
 
             if(event.type == COURSE)
                 splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      * 删除从startTime开始到endTime为止的 所有名为name的课外活动
      */
-    public void removeExtra(String name, Date startTime, Date endTime) {
+    public int removeExtra(String name, Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
-            if(event == null) continue;
+            if(event == null)
+                continue;
 
             if( name.equals( event.name ) && event.type == EXTRA )
                 splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      * 删除从startTime开始到endTime为止的 所有课外活动
      */
-    public void clearExtra(Date startTime, Date endTime) {
+    public int clearExtra(Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
             if(event == null) continue;
 
             if(event.type == EXTRA)
                 splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      * 删除从startTime开始到endTime为止的 所有名为name的临时事务
      */
-    public void removeTempo(String name, Date startTime, Date endTime) {
+    public int removeTempo(String name, Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
             if(event == null) continue;
             if(event.type != TEMPO) continue;
@@ -193,35 +259,54 @@ public class TimeTable {
             }
             if(event.tempo.isEmpty())//如果该时间戳所有的临时事务都没有了, 可以把这个时间戳删除
                 splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      * 清除从startTime开始到endTime为止的 所有临时事务
      */
-    public void clearTempo(Date startTime, Date endTime) {
+    public int clearTempo(Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
 
         while(cal.getTime().getTime() != endTime.getTime()) {
             Date date = cal.getTime();
+            cal.add(Calendar.HOUR_OF_DAY, 1);
+
             Event event = splay.search(date);
             if(event == null) continue;
             if(event.type != TEMPO) continue;
 
             splay.remove(date);
-
-            cal.add(Calendar.HOUR_OF_DAY, 1);
         }
+        return ret;
     }
 
     /** 批量删除
      *  清除时间范围内所有日程
      */
-    public void clear(Date startTime, Date endTime) {
+    public int clear(Date startTime, Date endTime) {
+        int ret = 1;
+        if(startTime.getTime() < this.startTime.getTime()) {
+            startTime = this.startTime;
+            ret = -1;
+        }
+        if(endTime.getTime() > this.endTime.getTime()) {
+            endTime = this.endTime;
+            ret = -1;
+        }
         splay.clear(startTime, endTime);
+        return ret;
     }
 
     /**
@@ -341,11 +426,11 @@ public class TimeTable {
         int rson = splay.node[u].son[1];
 
         if(lson != 0)
-            DFS(lson, type, a);
+            DFS(lson, tag, type, a);
         if( splay.node[u].type == type && splay.node[u].tag == tag)
             a.add(splay.node[u]);
         if(rson != 0)
-            DFS(rson, type, a);
+            DFS(rson, tag, type, a);
     }
 
     /**
@@ -366,6 +451,11 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> searchCourseName(String name, Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
+
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, name, COURSE, a);
@@ -377,6 +467,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> searchCourseTag(int tag, Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, tag, COURSE, a);
@@ -388,6 +482,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> displayCourse(Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, COURSE, a);
@@ -399,6 +497,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> searchExtraName(String name, Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, name, EXTRA, a);
@@ -410,6 +512,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> searchExtraTag(int tag, Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, tag, EXTRA, a);
@@ -421,6 +527,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> displayExtra(Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, EXTRA, a);
@@ -432,6 +542,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> searchTempoName(String name, Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, name, TEMPO, a);
@@ -443,6 +557,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> displayTempo(Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, TEMPO, a);
@@ -454,6 +572,10 @@ public class TimeTable {
      * 返回照时间排好序的ArrayList<Event>
      */
     public ArrayList<Event> displayAll(Date startTime, Date endTime) {
+        if(startTime.getTime() < this.startTime.getTime())
+            startTime = this.startTime;
+        if(endTime.getTime() > this.endTime.getTime())
+            endTime = this.endTime;
         int u = splay.preHandle(startTime, endTime);
         ArrayList<Event> a = new ArrayList<>();
         DFS(u, a);
@@ -494,27 +616,26 @@ public class TimeTable {
         Date date1 = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date1);
-        cal.add(Calendar.DATE, 60);
+        cal.add(Calendar.DATE, 90);
         Date date2 = cal.getTime();
+
         TimeTable timeTable = new TimeTable(date1, date2);
 
-        cal.add(Calendar.HOUR_OF_DAY, -5);
-        date2 = cal.getTime();
         cal.setTime(date1);
-        cal.add(Calendar.HOUR_OF_DAY, 2);
-        date1 = cal.getTime();
-
-        timeTable.addCourse("datastructure", date1, 1, 1, "ONE", null, 1);
+        cal.add(Calendar.HOUR_OF_DAY, 1);
+        Date date3 = cal.getTime();
+        timeTable.addExtra("shower", date3, 3, "ONE", null, 1);
+        cal.add(Calendar.DATE, 7);
+        date3 = cal.getTime();
         cal.add(Calendar.HOUR_OF_DAY, 24);
-        date1 = cal.getTime();
-        timeTable.addExtra("shower", date1, 1, "TWO", null, 1);
-        cal.add(Calendar.HOUR_OF_DAY, -24);
-        date1 = cal.getTime();
-        ArrayList<Event> event = timeTable.displayCourse(date1, date2);
+        Date date4 = cal.getTime();
+        timeTable.removeExtra("shower", date3, date4);
 
-        System.out.println(event.size());
+        ArrayList<Event> event = timeTable.displayExtra(date1, date2);
+
         for(int i = 0; i < event.size(); ++ i) {
             System.out.println(event.get(i).name);
+            System.out.println(event.get(i).location);
             System.out.println(event.get(i).time);
         }
     }
