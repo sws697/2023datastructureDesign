@@ -30,10 +30,14 @@ public class Splay {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
-        cal.add(Calendar.HOUR_OF_DAY, -1);
-        Date date = cal.getTime();
-        insert(null , date, null, null, 0, 0);//插入负无穷时间戳
-        insert(null , endTime, null, null, 0, 0);//插入正无穷时间戳
+        cal.add(Calendar.HOUR_OF_DAY, -24);
+        Date date1 = cal.getTime();
+        cal.setTime(endTime);
+        cal.add(Calendar.HOUR_OF_DAY, 24);
+        Date date2 = cal.getTime();
+
+        insert(null , date1, null, null, 0, 0);//插入负无穷时间戳
+        insert(null , date2, null, null, 0, 0);//插入正无穷时间戳
     }
 
     void pushup(int u) {//更新子树大小
@@ -225,6 +229,7 @@ public class Splay {
             node[u].size = 1;
             indexOccupy[u] = true;
             size ++;
+            root = u;
             return 1;
         }
 
@@ -238,6 +243,7 @@ public class Splay {
                 //否则可以加入ArrayList
                 Tempo t = new Tempo(name, location);
                 node[u].tempo.add(t);
+                splay(u, 0);
 
                 return 1;
             }
@@ -367,13 +373,14 @@ public class Splay {
      * 并返回根结点右儿子的左儿子的编号
      */
     public int preHandle(Date startTime, Date endTime) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startTime);
-        cal.add(Calendar.HOUR_OF_DAY, -1);
-        Date startTimeTemp = cal.getTime();
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(startTime);
+//        cal.add(Calendar.HOUR_OF_DAY, -1);
+//        startTime = cal.getTime();
 
-        int id1 = find(startTimeTemp);
-        if (id1 == -1) id1 = pre(startTimeTemp);
+//        int id1 = find(startTime);
+//        if (id1 == -1) id1 = pre(startTime);
+        int id1 = pre(startTime);
 
         int id2 = find(endTime);
         if (id2 == -1) id2 = nex(endTime);
