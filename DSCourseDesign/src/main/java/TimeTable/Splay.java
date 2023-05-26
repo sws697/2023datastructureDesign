@@ -26,7 +26,7 @@ public class Splay {
         indexOccupy = new boolean[MAX + 5];
         indexOccupy[0] = true;
         node = new Event[MAX + 5];
-        for(int i = 0; i <= MAX; ++i) node[i] = new Event();
+        for(int i = 0; i <= MAX; ++ i) node[i] = new Event();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
@@ -124,6 +124,7 @@ public class Splay {
      */
     int find(Date time) {//由于一开始会插入负无穷和正无穷结点, 平衡树不会为空
         int u = root;
+        if(u == 0) return -1;
         while(node[u].time.getTime() != time.getTime()) {
             if(node[u].time.getTime() > time.getTime()) {//往左儿子走
                 if (node[u].son[0] != 0) //左儿子存在
@@ -168,6 +169,7 @@ public class Splay {
             node[u].size = 1;
             indexOccupy[u] = true;
             size ++;
+            root = u;
             return 1;
         }
         int v = 0;//u的父亲
@@ -200,8 +202,8 @@ public class Splay {
         node[v].son[k] = u;
         pushup(v);
 
-        indexOccupy[u] = true;
         size ++;
+        indexOccupy[u] = true;
         splay(u, 0);
         return 1;
     }
@@ -340,7 +342,6 @@ public class Splay {
         }
     }
 
-
     /**
      * 删去时间戳为time的日程结点
      * @param time
@@ -369,10 +370,10 @@ public class Splay {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startTime);
         cal.add(Calendar.HOUR_OF_DAY, -1);
-        startTime = cal.getTime();
+        Date startTimeTemp = cal.getTime();
 
-        int id1 = find(startTime);
-        if (id1 == -1) id1 = pre(startTime);
+        int id1 = find(startTimeTemp);
+        if (id1 == -1) id1 = pre(startTimeTemp);
 
         int id2 = find(endTime);
         if (id2 == -1) id2 = nex(endTime);

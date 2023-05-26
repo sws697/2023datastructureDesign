@@ -16,7 +16,7 @@ public class Event {//事务时间戳
 
     /** tag:
      * 课程: 上课 or 考试
-     * 课外活动: 个人活动 or 集体活动
+     * 课外活动: 集体活动 or 个人活动
      */
     int tag;
 
@@ -28,16 +28,18 @@ public class Event {//事务时间戳
     int size;//子树大小
 
     public Event() {
-        name = new String();
-        time = new Date();
-        location = new String();
-        link = new String();
+        name = null;
+        time = null;
+        location = null;
+        link = null;
         type = 0;
         tag = 0;
 
         fa = 0;
         son = new int [2];
         size = 1;
+
+        tempo = new ArrayList<>();
     }
 
     public String getName() {

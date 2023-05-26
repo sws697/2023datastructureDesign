@@ -297,9 +297,10 @@ public class TimeTable {
         if(lson != 0)
             DFS(lson, name, type, a);
 
-        if(type != TEMPO) //类型为COURSE或者EXTRA
-            if( name.equals(splay.node[u].name) && splay.node[u].type == type )
+        if(type != TEMPO) {//类型为COURSE或者EXTRA
+            if (name.equals(splay.node[u].name) && splay.node[u].type == type)
                 a.add(splay.node[u]);
+        }
         else {//类型为TEMPO
             ArrayList<Tempo> t = splay.node[u].tempo;
             for(int i = 0; i < t.size(); ++ i) {
@@ -490,5 +491,31 @@ public class TimeTable {
     }
 
     public static void main(String[] args) {
+        Date date1 = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date1);
+        cal.add(Calendar.DATE, 60);
+        Date date2 = cal.getTime();
+        TimeTable timeTable = new TimeTable(date1, date2);
+
+        cal.add(Calendar.HOUR_OF_DAY, -5);
+        date2 = cal.getTime();
+        cal.setTime(date1);
+        cal.add(Calendar.HOUR_OF_DAY, 2);
+        date1 = cal.getTime();
+
+        timeTable.addCourse("datastructure", date1, 1, 1, "ONE", null, 1);
+        cal.add(Calendar.HOUR_OF_DAY, 24);
+        date1 = cal.getTime();
+        timeTable.addExtra("shower", date1, 1, "TWO", null, 1);
+        cal.add(Calendar.HOUR_OF_DAY, -24);
+        date1 = cal.getTime();
+        ArrayList<Event> event = timeTable.displayCourse(date1, date2);
+
+        System.out.println(event.size());
+        for(int i = 0; i < event.size(); ++ i) {
+            System.out.println(event.get(i).name);
+            System.out.println(event.get(i).time);
+        }
     }
 }
