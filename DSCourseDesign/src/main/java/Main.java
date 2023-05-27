@@ -419,35 +419,167 @@ public class Main {
                             Calendar c = Calendar.getInstance();
                             c.setTime(Date.valueOf(args[4]));
                             for (int i = 0; i < cycleLast; i++) {
+                                System.out.println(c.getTime() + ":");
                                 if (args[7].equals("个人活动")) {
-                                    Student.addExtra(args[1], args[3], c.getTime(), 1, 2, 0, 1, Student.getSid(), null);
+                                    int ret = Student.addExtra(args[1], args[3], c.getTime(), 1, 2, 1, 1, Student.getSid(), null);
+                                    if (ret != -1) {
+                                        if (ret == 1) {
+                                            System.out.println("添加成功");
+                                        } else if (ret == 2) {
+                                            System.out.println(c.getTime() + "添加成功，但是临时事务被覆盖");
+                                        }
+                                    } else {
+                                        System.out.println("添加失败");
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(c.getTime());
+                                        if (timeTable.searchAvailable(c.getTime()).size() != 0) {
+                                            System.out.println("可用时间段：");
+                                            for (java.util.Date date : availableTime) {
+                                                System.out.println(date);
+                                            }
+                                        } else {
+                                            System.out.println("无可用时间段");
+                                        }
+                                    }
                                 } else if (args[7].equals("集体活动")) {
-                                    Student.addExtra(args[1], args[3], c.getTime(), 2, 2, 0, 1, Student.getSid(), null);
+                                    int ret = Student.addExtra(args[1], args[3], c.getTime(), 2, 2, 1, 1, Student.getSid(), null);
+                                    if (ret != -1) {
+                                        if (ret == 1) {
+                                            System.out.println("添加成功");
+                                        } else if (ret == 2) {
+                                            System.out.println(c.getTime() + "添加成功，但是临时事务被覆盖");
+                                        }
+                                    } else {
+                                        System.out.println("添加失败");
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(c.getTime());
+                                        if (timeTable.searchAvailable(c.getTime()).size() != 0) {
+                                            System.out.println("可用时间段：");
+                                            for (java.util.Date date : availableTime) {
+                                                System.out.println(date);
+                                            }
+                                        } else {
+                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(c.getTime());
+                                            System.out.println("无可用时间段，打印三个使用最少的时间段：");
+                                            for (java.util.Date date : availableTime2) {
+                                                System.out.println(date);
+                                            }
+                                        }
+                                    }
                                 }
                                 c.add(Calendar.DATE, 1);
                             }
                         } else if (args[5].equals("once")) {
                             if (args[6].equals("个人活动")) {
-                                Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, 0, 1, Student.getSid(), null);
+                                int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), null);
+                                if (ret != -1) {
+                                    if (ret == 1) {
+                                        System.out.println("添加成功");
+                                    } else if (ret == 2) {
+                                        System.out.println("添加成功，但是临时事务被覆盖");
+                                    }
+                                } else {
+                                    System.out.println("添加失败");
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
+                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        System.out.println("可用时间段：");
+                                        for (java.util.Date date : availableTime) {
+                                            System.out.println(date);
+                                        }
+                                    } else {
+                                        System.out.println("无可用时间段");
+                                    }
+                                }
                             } else if (args[6].equals("集体活动")) {
-                                Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, 0, 1, Student.getSid(), null);
+                                int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), null);
+                                if (ret != -1) {
+                                    if (ret == 1) {
+                                        System.out.println("添加成功");
+                                    } else if (ret == 2) {
+                                        System.out.println("添加成功，但是临时事务被覆盖");
+                                    }
+                                } else {
+                                    System.out.println("添加失败");
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
+                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        System.out.println("可用时间段：");
+                                        for (java.util.Date date : availableTime) {
+                                            System.out.println(date);
+                                        }
+                                    } else {
+                                        ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                        System.out.println("无可用时间段，打印三个使用最少的时间段：");
+                                        for (java.util.Date date : availableTime2) {
+                                            System.out.println(date);
+                                        }
+                                    }
+                                }
                             }
                         } else if (args[5].equals("weekly")) {
+                            int weeklast = Integer.parseInt(args[6]);
                             if (args[7].equals("个人活动")) {
-                                Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, Integer.parseInt(args[6]), 1, Student.getSid(), null);
+                                for (int i = 0; i < weeklast; i++) {
+                                    int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), null);
+                                    if (ret != -1) {
+                                        if (ret == 1) {
+                                            System.out.println("添加成功");
+                                        } else if (ret == 2) {
+                                            System.out.println("添加成功，但是临时事务被覆盖");
+                                        }
+                                    } else {
+                                        System.out.println("添加失败");
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
+                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                            System.out.println("可用时间段：");
+                                            for (java.util.Date date : availableTime) {
+                                                System.out.println(date);
+                                            }
+                                        } else {
+                                            System.out.println("无可用时间段");
+                                        }
+                                    }
+
+                                }
                             } else if (args[7].equals("集体活动")) {
-                                Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, Integer.parseInt(args[6]), 1, Student.getSid(), null);
+                                for (int i = 0; i < weeklast; i++) {
+                                    int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), null);
+                                    if (ret != -1) {
+                                        if (ret == 1) {
+                                            System.out.println("添加成功");
+                                        } else if (ret == 2) {
+                                            System.out.println("添加成功，但是临时事务被覆盖");
+                                        }
+                                    } else {
+                                        System.out.println("添加失败");
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
+                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                            System.out.println("可用时间段：");
+                                            for (java.util.Date date : availableTime) {
+                                                System.out.println(date);
+                                            }
+                                        } else {
+                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                            System.out.println("无可用时间段，打印三个使用最少的时间段：");
+                                            for (java.util.Date date : availableTime2) {
+                                                System.out.println(date);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                     break;
                 case "AddTempo":
                     /*AddTempo [name]  [start_time](format:yyyy-mm-ll)  [location]*/
-                    Student.addTempo(args[1], args[3], Date.valueOf(args[2]), 0, 3, 0, 1, Student.getSid(), null);
+                    if(Student.addTempo(args[1], args[3], Date.valueOf(args[2]), 0, 3, 0, 1, Student.getSid(), null)){
+                        System.out.println("添加成功");
+                    } else  {
+                        System.out.println("有其他的课程或课外活动,添加失败");
+                    }
                     break;
                 case "SearchTempoByName":
                     /*SearchTempoByTime [name] [start_time](format:yyyy-mm-ll)  [end_time](format:yyyy-mm-ll)*/
                     ArrayList<Event> SearchResult3 = timeTable.searchTempoName(args[1], Date.valueOf(args[2]), Date.valueOf(args[3]));
+                if(SearchResult3.size()!=0){
                     for (Event event : SearchResult3) {
                         System.out.println("Tempo:");
                         for (Tempo tempo : event.getTempo()) {
@@ -456,23 +588,30 @@ public class Main {
                             }
                         }
                     }
+                }else{
+                    System.out.println("无结果");
+                }
+
                     break;
                 case "SearchTempoByTime":
                     /*SearchTempoByTime [start_time](format:yyyy-mm-ll)  [end_time](format:yyyy-mm-ll)*/
                     ArrayList<Event> SearchResult4 = timeTable.displayTempo(Date.valueOf(args[1]), Date.valueOf(args[2]));
+                if(SearchResult4.size()!=0){
                     for (Event event : SearchResult4) {
                         System.out.println("Tempo:");
                         for (Tempo tempo : event.getTempo()) {
                             System.out.println(event.getTime() + tempo.name + " " + tempo.location);
                         }
                     }
-                    break;
+                }else{
+                    System.out.println("无结果");
+                }
+                break;
                 case "logout":
                     System.out.println("登出成功");
                     return;
             }
         }
-
     }
 
     private static void PrintCourseEvents(ArrayList<Event> events) {
