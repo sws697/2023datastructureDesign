@@ -14,7 +14,7 @@ public class HashTable {
         public Node() {
             next = 0;
             value = 0;
-            key = new String();
+            key = null;
         }
 
         public Node(int next, int value, String key) {
@@ -31,7 +31,7 @@ public class HashTable {
 
     public HashTable() {
         data = new Node[MAX + 5];
-        for(Node elem: data) elem = new Node();
+        for(int i = 0; i <= MAX ; ++ i) data[i] = new Node();
 
         dataOccupy = new boolean[MAX + 5];
         dataOccupy[0] = true;
@@ -103,6 +103,7 @@ public class HashTable {
 
         while(dataOccupy[cnt]) cnt = (cnt + 1) % (MAX + 1);
 
+        dataOccupy[cnt] = true;
         data[cnt] = n;
         head[h] = cnt;
         size ++;

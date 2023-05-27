@@ -3,10 +3,7 @@
  */
 package Graph;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class Graph {
     /**
@@ -38,7 +35,7 @@ public class Graph {
         for(int i = 0; i <= MAX; ++ i) node[i] = new Node();
 
         edge = new Edge[MAXE + 5];
-        for(int i = 0; i <= MAXE; ++ i) edge[i] = new Edge();
+        for(int i = 0; i <= MAX; ++ i) edge[i] = new Edge();
 
         head = new int[MAX + 5];
 
@@ -46,7 +43,7 @@ public class Graph {
         dis = new int[MAX + 5];
         for(int i = 0; i <= MAX; ++ i) dis[i]= Integer.MAX_VALUE;
 
-        ArrayList<Integer>[][] path = new ArrayList[MAX + 5][MAX + 5];
+        path = new ArrayList[MAX + 5][MAX + 5];
         for(int i = 0; i <= MAX; ++ i)
             for(int j = 0; j <= MAX; ++ j)
                 path[i][j] = new ArrayList<Integer>();
@@ -76,15 +73,12 @@ public class Graph {
             this.first = p.first;
             this.second = p.second;
         }
-    }
 
-    /**
-     * pair的比较器
-     */
-    class pairComparator implements Comparator<pair> {
-        public int compare(pair a, pair b) {
-            return a.second - b.second;
-        }
+        public static Comparator<pair> pairComparator = new Comparator<pair>() {
+            public int compare(pair a, pair b) {
+                return a.second - b.second;
+            }
+        };
     }
 
     /**
@@ -102,10 +96,10 @@ public class Graph {
      * Priorityqueue后续可能会自己实现，先用容器
      */
     public void Dijkstra(int x) {//以x为源点进行Dijkstra最短路算法
-        Queue< pair > q = new PriorityQueue<>();
-        boolean[] vis = new boolean[MAX];
+        Queue< pair > q = new PriorityQueue<>(pair.pairComparator);
+        boolean[] vis = new boolean[MAX + 5];
         for(int i = 0; i <= node_num; i ++) dis[i] = Integer.MAX_VALUE;
-        int[] last = new int [MAX];
+        int[] last = new int [MAX + 5];
 
         dis[x] = 0;
         pair p = new pair(x, dis[x]);
@@ -248,12 +242,12 @@ public class Graph {
             int ind = hashtable.get( passBy.get(i) );
             if(ind == -1) return null;
 
-            a.add( id );
-            mapping[id] = i + 1;
+            a.add( ind );
+            mapping[ind] = i + 1;
         }
         f[1][id] = 0;
 
-        for(int i = 2; i < (int)Math.pow(2, a.size()) - 1; ++ i) {//先枚举状态
+        for(int i = 2; i <= (int)Math.pow(2, a.size()) - 1; ++ i) {//先枚举状态
             for(int jj = 0; jj < a.size(); ++ jj) {//再枚举最后到达的点
                 int j = a.get(jj);//j为结点编号
                 if(checkBit(i, mapping[j]) == 0) continue;//非法状态, 跳过
@@ -261,9 +255,9 @@ public class Graph {
                 for(int kk = 0; kk < a.size(); ++ kk) {//枚举从k到达j
                     int state = setBit(i, mapping[j], 0);
                     int k = a.get(kk);//k为结点编号
-                    if (checkBit(state, mapping[k]) == 0) continue;//非法状态 跳过
+                    if(checkBit(state, mapping[k]) == 0) continue;//非法状态 跳过
 
-                    if(f[state][k] + distance[k][j] < f[i][j]) {
+                    if((long)f[state][k] + (long)distance[k][j] < f[i][j]) {
                         f[i][j] = f[state][k] + distance[k][j];
                         last[i][j] = k;
                     }
@@ -271,31 +265,81 @@ public class Graph {
             }
         }
 
-        int end = 0, minx = Integer.MAX_VALUE;
+        int end = 0;
+        int minx = Integer.MAX_VALUE;
         for(int ii = 1; ii < a.size(); ++ ii) {//枚举终点
             int i = a.get(ii);
-            if(f[(int)Math.pow(2, a.size()) - 1][i] + distance[i][id] < minx) {
+            if((long)f[(int)Math.pow(2, a.size()) - 1][i] + (long)distance[i][id] < minx) {
                 end = i;
                 minx = f[(int) Math.pow(2, a.size()) - 1][i] + distance[i][id];
             }
         }
-        ArrayList<Node> ans1 = new ArrayList<>();
-        ans1.add( node[hashtable.get(start)] );
+        ArrayList<Integer> ans1 = new ArrayList<>();
+        ans1.add( id );
 
-        int state = (int)Math.pow(2, a.size() - 1);
+        int state = (int)Math.pow(2, a.size()) - 1;
         int u = end;
         while(state != 1) {
-            ans1.add( node[u] );
+            ans1.add( u );
             int t = u;
             u = last[state][u];
             state = setBit(state, mapping[t], 0);
         }
-        ans1.add( node[hashtable.get(start)] );
+        ans1.add( id );
 
         ArrayList<Node> ans2 = new ArrayList<>();
-        for(int i = ans1.size() - 1; i >= 0; -- i)
-            ans2.add(ans1.get(i));
+        for(int i = ans1.size() - 1; i > 0; -- i) {
+            int x = ans1.get(i);
+            int y = ans1.get(i - 1);
+
+            ArrayList<Node> temp = shortestPath(node[x].name, node[y].name);
+            for(int j = 0; j < temp.size() - 1; ++ j)
+                ans2.add(temp.get(j));
+        }
+        ans2.add(node[id]);
 
         return ans2;
+    }
+
+    public static void main(String[] args) {
+        Graph graph = new Graph();
+        graph.createBuilding("ONE");
+        graph.createBuilding("TWO");
+        graph.createBuilding("THREE");
+        graph.createBuilding("FOUR");
+        graph.createBuilding("FIVE");
+        graph.createBuilding("SIX");
+        graph.createBuilding("SEVEN");
+        graph.createBuilding("EIGHT");
+        graph.createBuilding("NINE");
+//        System.out.println(graph.hashtable.get("EIGHT"));
+
+        graph.createRoad("ONE", "TWO", 2);
+        graph.createRoad("ONE", "FOUR", 2);
+        graph.createRoad("TWO", "THREE", 3);
+        graph.createRoad("TWO", "FIVE", 3);
+        graph.createRoad("THREE", "SIX", 1);
+        graph.createRoad("FOUR", "FIVE", 2);
+        graph.createRoad("FIVE", "SIX", 4);
+        graph.createRoad("FIVE", "EIGHT", 7);
+        graph.createRoad("FOUR", "SEVEN", 5);
+        graph.createRoad("EIGHT", "SEVEN", 6);
+        graph.createRoad("EIGHT", "NINE", 8);
+        graph.createRoad("SIX", "NINE", 9);
+
+        graph.initShortestPath();
+
+        ArrayList<String> by = new ArrayList<>();
+        by.add("TWO");
+        by.add("FIVE");
+        by.add("EIGHT");
+        by.add("THREE");
+        by.add("SIX");
+        by.add("NINE");
+        ArrayList<Node> ans = graph.pathByTheWay("ONE", by);
+//        ArrayList<Node> ans = graph.shortestPath("FOUR", "FIVE");
+        for(int i = 0; i < ans.size(); ++ i) {
+            System.out.println(ans.get(i).name);
+        }
     }
 }
