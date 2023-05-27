@@ -206,20 +206,19 @@ public class Student {
         return timeTable;
     }
 
-    public static boolean addExtra(String name, String location,
+    public static int addExtra(String name, String location,
                                 Date startTime, int tag,
                                 int type, int weekLast,
                                 int hourLast, int sid,
                                 String link) {
-        if (timeTable.addExtra(name, startTime, weekLast, location, link, tag) == 1) {
+        int ret= timeTable.addExtra(name, startTime, weekLast, location, link, tag);
+        if (ret!=-1) {
             SqlSession sesssion = GetSession.getSesssion();
             StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
             mapper.addExtra(name, location, startTime, tag, type, weekLast, hourLast, sid, link);
             sesssion.close();
-            return true;
         }
-        return false;
-
+        return ret;
     }
 
     public static boolean addTempo(String name, String location,
