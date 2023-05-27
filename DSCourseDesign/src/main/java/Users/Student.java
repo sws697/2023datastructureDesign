@@ -36,7 +36,7 @@ public class Student {
      */
     private static String location;
 
-    private static TimeTable timeTable = new TimeTable(new Date(2023, 1, 17), new Date(2023, 5, 19));
+    private static TimeTable timeTable = new TimeTable(new Date(70, 1, 17), new Date(200, 5, 19));
 
     private static Graph graph = new Graph();
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Event {//事务时间戳
-    String name;//课程或临时事务名称
+    String name;//课程或课外活动或临时事务名称
     ArrayList<Tempo> tempo;//由于同一个时间戳可存在多个临时事务, 故选择用ArrayList来存储临时事务
     Date time;//时间戳
     String location;//课程地点名称
