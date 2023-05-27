@@ -3,9 +3,7 @@
  */
 package TimeTable;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Calendar;
+import java.util.*;
 
 public class TimeTable {
     final static int MAX = 1024;
@@ -608,7 +606,37 @@ public class TimeTable {
         if(splay.find(time) == -1) return true;
         else return false;
     }
+    public ArrayList<Date> searchLeastUsedTime(Date time){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        cal.add(Calendar.HOUR_OF_DAY, -time.getHours() + 6);
+        Date d1=cal.getTime();
+        cal.add(Calendar.HOUR_OF_DAY, 16);
+        Date d2=cal.getTime();
+        ArrayList<Date> a = new ArrayList<>();
+        ArrayList<Event> events=displayAll(d1,d2);
+        Map<Integer,Event> map=new TreeMap<>();
+        for(Event event:events){
+            int cnt=0;
+            if(event.getType()!=3){
+                cnt++;
 
+            }else{
+                cnt+=event.getTempo().size();
+            }
+            map.put(cnt,event);
+        }
+        int cnt1=0;
+        for(Map.Entry<Integer,Event> entry:map.entrySet()){
+            if(cnt1<3){
+                a.add(entry.getValue().getTime());
+            }else{
+                break;
+            }
+            cnt1++;
+        }
+        return a;
+    }
     public ArrayList<Date> searchAvailable(Date time) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
