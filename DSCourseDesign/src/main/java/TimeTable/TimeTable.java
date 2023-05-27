@@ -74,6 +74,21 @@ public class TimeTable {
         cal.setTime(startTime);
         int cnt1 = weekLast;
         int ret = 1;
+        if(weekLast == 1) {//单点加入的特判情况
+            if(splay.search(startTime) == null) {
+                splay.insert(name, startTime, location, link, EXTRA, tag);
+            }
+            else if(splay.search(startTime).type == TEMPO) {
+                splay.remove(startTime);
+                splay.insert(name, startTime, location, link, EXTRA, tag);
+                ret = 2;
+            }
+            else if(splay.search(startTime).type != TEMPO) {
+                ret = -1;
+            }
+
+            return ret;
+        }
 
         while(cnt1 != 0) {
             Date temp = cal.getTime();
@@ -362,8 +377,10 @@ public class TimeTable {
         int ret = -1;
         for(int i = 0; i < event.tempo.size(); ++ i)
             if( oldName.equals(event.tempo.get(i).name) ) {
-                event.tempo.get(i).name = newName;
-                event.tempo.get(i).location = newLocation;
+                if(newName != null)
+                    event.tempo.get(i).name = newName;
+                if(newLocation != null)
+                    event.tempo.get(i).location = newLocation;
                 ret = 1;
                 break;
             }
@@ -624,19 +641,21 @@ public class TimeTable {
         cal.setTime(date1);
         cal.add(Calendar.HOUR_OF_DAY, 1);
         Date date3 = cal.getTime();
-        timeTable.addExtra("shower", date3, 3, "ONE", null, 1);
-        cal.add(Calendar.DATE, 7);
-        date3 = cal.getTime();
-        cal.add(Calendar.HOUR_OF_DAY, 24);
-        Date date4 = cal.getTime();
-        timeTable.removeExtra("shower", date3, date4);
+        timeTable.addTempo("AAA", date3, "ONE");
+        timeTable.addTempo("BBB", date3, "ONE");
 
-        ArrayList<Event> event = timeTable.displayExtra(date1, date2);
+        timeTable.updateTempo(date3, "AAA", "CCC", null);
+        timeTable.removeTempo("CCC", date1, date2);
+        timeTable.removeTempo("BBB", date1, date2);
+        ArrayList<Event> event = timeTable.displayTempo(date1, date2);
 
         for(int i = 0; i < event.size(); ++ i) {
-            System.out.println(event.get(i).name);
-            System.out.println(event.get(i).location);
-            System.out.println(event.get(i).time);
+            for(int j = 0; j < event.get(i).tempo.size(); ++ j) {
+                System.out.println(event.get(i).time);
+                System.out.println(event.get(i).tempo.get(j).name);
+                System.out.println(event.get(i).tempo.get(j).location);
+//                System.out.println(event.get(i).tempo.get(j).name);
+            }
         }
     }
 }
