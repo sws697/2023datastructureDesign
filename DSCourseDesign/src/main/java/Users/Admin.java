@@ -50,6 +50,7 @@ public class Admin {
         SqlSession session = GetSession.getSesssion();
         AdminMapper mapper  = session.getMapper(AdminMapper.class);
         mapper.addStu(sid,password,location);
+        session.commit();
         session.close();
     }
 
@@ -60,6 +61,7 @@ public class Admin {
         SqlSession session = GetSession.getSesssion();
         AdminMapper mapper = session.getMapper(AdminMapper.class);
         mapper.addCourse(name,lcoation,startTime,tag,type,weekLast,hourLast,sid,link);
+        session.commit();
         session.close();
     }
 
@@ -67,6 +69,7 @@ public class Admin {
         SqlSession session = GetSession.getSesssion();
         AdminMapper mapper = session.getMapper(AdminMapper.class);
         mapper.removeCourse(name,sid);
+        session.commit();
         session.close();
     }
 
@@ -74,6 +77,7 @@ public class Admin {
         SqlSession sesssion = GetSession.getSesssion();
         AdminMapper mapper = sesssion.getMapper(AdminMapper.class);
         mapper.updateCourseLocation(name,Location);
+        sesssion.commit();
         sesssion.close();
     }
 
@@ -81,6 +85,7 @@ public class Admin {
         SqlSession sesssion = GetSession.getSesssion();
         AdminMapper mapper = sesssion.getMapper(AdminMapper.class);
         mapper.updateCourseStartTime(name,startTime);
+        sesssion.commit();
         sesssion.close();
     }
 

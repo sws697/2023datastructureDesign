@@ -4,14 +4,11 @@ import Dao.GetSession;
 import Graph.*;
 import TimeTable.*;
 import Users.tool.EventForRec;
-import VTime.Clock;
 import VTime.VirtualTime;
 import mapper.EventMapper;
 import mapper.GraphMapper;
 import mapper.StudentMapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
-import org.w3c.dom.CDATASection;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +26,7 @@ public class Student {
     /**
      * 为0表示当前未登录成功
      */
-    private static int sid = 0;
+    private static Integer sid = 0;
     private static String password = "0";
     /**
      * 目前暂定学生初始位置为学五
@@ -216,6 +213,7 @@ public class Student {
             SqlSession sesssion = GetSession.getSesssion();
             StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
             mapper.addExtra(name, location, startTime, tag, type, weekLast, hourLast, sid, link);
+            sesssion.commit();
             sesssion.close();
         }
         return ret;
@@ -230,6 +228,7 @@ public class Student {
             SqlSession sesssion = GetSession.getSesssion();
             StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
             mapper.addTempo(name, location, startTime, tag, type, weekLast, hourLast, sid, link);
+            sesssion.commit();
             sesssion.close();
             return true;
         }
@@ -241,6 +240,7 @@ public class Student {
             SqlSession sesssion = GetSession.getSesssion();
             StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
             mapper.updateExtra(startTime, name, newLocation, sid, newTag, newLink);
+            sesssion.commit();
             sesssion.close();
             return true;
         }
@@ -252,6 +252,7 @@ public class Student {
             SqlSession sesssion = GetSession.getSesssion();
             StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
             mapper.updateTempo(startTime, oldName, newName, newLocation, sid, newTag, newLink);
+            sesssion.commit();
             sesssion.close();
             return true;
         }
@@ -271,6 +272,7 @@ public class Student {
         SqlSession sesssion = GetSession.getSesssion();
         StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
         mapper.deleteExtra(name, sid);
+        sesssion.commit();
         sesssion.close();
     }
 
@@ -279,6 +281,7 @@ public class Student {
         SqlSession sesssion = GetSession.getSesssion();
         StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
         mapper.deleteTempo(name, sid);
+        sesssion.commit();
         sesssion.close();
     }
 
@@ -294,17 +297,12 @@ public class Student {
             graph.createRoad(road.getName1(),road.getName1(),road.getLen());
         }
         graph.initShortestPath();
-
     }
 
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return sid.hashCode();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
 }
