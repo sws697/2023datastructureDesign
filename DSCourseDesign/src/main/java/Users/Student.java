@@ -300,7 +300,7 @@ public class Student {
             graph.createBuilding(node.getName());
         }
         for(Road road:roads){
-            graph.createRoad(road.getName1(),road.getName1(),road.getLen());
+            graph.createRoad(road.getName1(),road.getName2(),road.getLen());
         }
         graph.initShortestPath();
     }

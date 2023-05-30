@@ -9,6 +9,8 @@ import TimeTable.Tempo;
 import Users.Student;
 
 
+import java.io.*;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,9 +22,11 @@ import java.util.*;
  */
 public class VirtualTime {
     private static  Calendar calendar = Calendar.getInstance();//用日历表示时间
-    private static int rate = 5;//现实时间rate秒=虚拟时间1小时
+    private static int rate = 2;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
+    private static File log = new File("log.txt");
+    private static PrintWriter pw;
     boolean isDo = false;
 
     public static Calendar getCalendar() {
@@ -103,6 +107,7 @@ public class VirtualTime {
 
 
             calendar.add(Calendar.HOUR_OF_DAY, 1);//时间推进
+            System.out.println(getTime());
 
             //模拟执行任务区
 
@@ -130,7 +135,9 @@ public class VirtualTime {
     /**
      * 开启定时器，空参构造表示以默认时间开启，后续可能升级为从数据库读取上次时间
      */
-    public void TimeStart() {
+    public void TimeStart() throws FileNotFoundException {
+        OutputStream out = new FileOutputStream(log);
+        pw = new PrintWriter(out);
         this.TimeStart(2023, 2, 18, 0);
     }
 
@@ -182,14 +189,21 @@ public class VirtualTime {
      * 这只是第一个版本，可能根据需求再改
      */
     public void HourlyTask() {
+        System.out.println(getHours());
+        if(getHours()==0){
+            System.out.println(getTime());
+            pw.println(getTime());
+        }
         Event nextEvent = Student.CourseAdvanceRemind();
         if (nextEvent != null) {
+            System.out.println(new Date());
             Event currentEvent = Student.getCurrentEvent();
             if (currentEvent != null) {
                 if (currentEvent.getName().equals(nextEvent.getName())) {
                     System.out.println("同一门课的不同时间段");
                 } else {
                     System.out.println("下一门课是" + nextEvent.getName());
+                    pw.println("下一门课是" + nextEvent.getName());
                     if(nextEvent.getLocation()!=null){
                         Graph graph = new Graph();
                         ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
@@ -199,10 +213,13 @@ public class VirtualTime {
                         String[] temp= url.split(".");
                         System.out.println("课程平台为"+temp[1]);
                         System.out.println("课程链接为" + nextEvent.getLink());
+                        pw.println("课程平台为"+temp[1]);
+                        pw.println("课程链接为" + nextEvent.getLink());
                     }
                 }
             } else {
                 System.out.println("下一门课是" + nextEvent.getName());
+                pw.println("下一门课是" + nextEvent.getName());
                 if(nextEvent.getLocation()!=null){
                     Graph graph = new Graph();
                     ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
@@ -211,10 +228,12 @@ public class VirtualTime {
                     String url = nextEvent.getLink();
                     String[] temp= url.split(".");
                    System.out.println("课程平台为"+temp[1]);
+                   pw.println("课程平台为"+temp[1]);
                     System.out.println("课程链接为" + nextEvent.getLink());
+                    pw.println("课程链接为" + nextEvent.getLink());
                 }
             }
-
+            System.out.println(new Date());
         }
 
         if (Clock.Ring()) {
@@ -239,14 +258,16 @@ public class VirtualTime {
                 }
             } else if (event.getType()==3) {
                 System.out.println(calendar.getTime()+" 当前临时事务:");
+                pw.println(calendar.getTime()+" 当前临时事务:");
                 ArrayList<Tempo> tempos = event.getTempo();
-                ArrayList<String> tempoNames = new ArrayList<>();
+                ArrayList<String> tempoLocations = new ArrayList<>();
                 for(Tempo tempo:tempos){
-                    tempoNames.add(tempo.name);
+                    tempoLocations.add(tempo.location);
                     System.out.println(tempo.name+" "+tempo.location);
+                    pw.println(tempo.name+" "+tempo.location);
                 }
                 Graph graph = new Graph();
-                ArrayList<Node> path = graph.pathByTheWay(Student.getLocation(), tempoNames);
+                ArrayList<Node> path = graph.pathByTheWay(Student.getLocation(), tempoLocations);
                 NavigationGUI navigationGUI = new NavigationGUI(path);
             }
         }
@@ -268,8 +289,4 @@ public class VirtualTime {
             }
         }
     }
-
-
-
-
 }

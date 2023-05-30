@@ -7,7 +7,9 @@ import VTime.Clock;
 import VTime.VirtualTime;
 
 import java.io.*;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -34,12 +36,12 @@ public class Main {
                     break;
                 case "addCourseOneByOne":
                     /*拟实现：给单独学生加入课程*/
-                    /*addCourceOneByOne [name] [location(online or offline)] [start_time](format:yyyy-mm-ll) [tag(课程类型)]  [weekLast] [hourLast] [StudentID] [Link(option)]*/
+                    /*addCourceOneByOne [name] [location(online or offline)] [start_time](format:yyyy-mm-ll,HH:mm:ss) [tag(课程类型)]  [weekLast] [hourLast] [StudentID] [Link(option)]*/
                     if (args.length == 8) {
-                        admin.addCourse(args[1], args[2], Date.valueOf(args[3]), Integer.parseInt(args[4]), 1,
+                        admin.addCourse(args[1], args[2], convertStringToDate(args[3]), Integer.parseInt(args[4]), 1,
                                 Integer.parseInt(args[5]), Integer.parseInt(args[6]), Integer.parseInt(args[7]), null);
                     } else if (args.length == 9 && args[2].equals("online")) {
-                        admin.addCourse(args[1], null, Date.valueOf(args[3]), Integer.parseInt(args[4]), 1,
+                        admin.addCourse(args[1], null, convertStringToDate(args[3]), Integer.parseInt(args[4]), 1,
                                 Integer.parseInt(args[5]), Integer.parseInt(args[6]), Integer.parseInt(args[7]), args[8]);
                     }
                     break;
@@ -85,7 +87,7 @@ public class Main {
                         location1 = input.nextLine();
                     }
                     for (int i = sid1; i <= sid2; i++) {
-                        admin.addCourse(name3, location1, Date.valueOf(startTime), tag, 1, weeklast, hourLast, i, link);
+                        admin.addCourse(name3, location1, convertStringToDate(startTime), tag, 1, weeklast, hourLast, i, link);
                     }
                     break;
                 case "MassDeleteCourse":
@@ -104,7 +106,7 @@ public class Main {
                     String name = input.nextLine();
                     System.out.println("Please enter the new start time");
                     String newStartTime = input.nextLine();
-                    admin.updateCourseStartTime(name, Date.valueOf(newStartTime));
+                    admin.updateCourseStartTime(name, convertStringToDate(newStartTime));
                     break;
                 case "updateCourseLocation":
                     /*updateCourseLocation*/
@@ -132,7 +134,7 @@ public class Main {
                     if (args.length == 4) {
                         System.out.println("SEAB");
                         pw.println("SearchCourseByName "+args[1]+" "+args[2]+" "+args[3]);
-                        ArrayList<Event> events = timeTable.searchCourseName(args[1], Date.valueOf(args[2]), Date.valueOf(args[3]));
+                        ArrayList<Event> events = timeTable.searchCourseName(args[1], convertStringToDate(args[2]), convertStringToDate(args[3]));
                         if (events.size() != 0) {
                             PrintCourseEvents(events);
                         } else {
@@ -141,7 +143,7 @@ public class Main {
                         }
 
                     } else if (args.length == 2) {
-                        ArrayList<Event> events = timeTable.searchCourseName(args[1], Date.valueOf("1970-01-01"), Date.valueOf("2100-01-01"));
+                        ArrayList<Event> events = timeTable.searchCourseName(args[1], convertStringToDate("1970-01-01"), convertStringToDate("2100-01-01"));
                         pw.println("SearchCourseByName "+args[1]);
                         if (events.size() != 0) {
                             PrintCourseEvents(events);
@@ -155,7 +157,7 @@ public class Main {
                     /*查询课外活动*/
                     /*SearchExtraByName [name] [start_time](format:yyyy-mm-ll) [end_time]*/
                     if (args.length == 4) {
-                        ArrayList<Event> events = timeTable.searchExtraName(args[1], Date.valueOf(args[2]), Date.valueOf(args[3]));
+                        ArrayList<Event> events = timeTable.searchExtraName(args[1], convertStringToDate(args[2]), convertStringToDate(args[3]));
                         pw.println("SearchExtraByName "+args[1]+" "+args[2]+" "+args[3]);
                         if (events.size() != 0) {
                             PrintExtraEvents(events);
@@ -164,7 +166,7 @@ public class Main {
                             pw.println("No such ExtraEvent");
                         }
                     } else if (args.length == 2) {
-                        ArrayList<Event> events = timeTable.searchExtraName(args[1], Date.valueOf("1970-01-01"), Date.valueOf("2100-01-01"));
+                        ArrayList<Event> events = timeTable.searchExtraName(args[1], convertStringToDate("1970-01-01"), convertStringToDate("2100-01-01"));
                         pw.println("SearchExtraByName "+args[1]);
                         if (events.size() != 0) {
                             PrintExtraEvents(events);
@@ -176,7 +178,7 @@ public class Main {
                     break;
                 case "SearchExtraByTime":
                     /*SearchExtraByTime  [begin_time] [end_time]*/
-                    ArrayList<Event> events = timeTable.displayExtra(Date.valueOf(args[1]), Date.valueOf(args[2]));
+                    ArrayList<Event> events = timeTable.displayExtra(convertStringToDate(args[1]), convertStringToDate(args[2]));
                     pw.println("SearchExtraByTime "+args[1]+" "+args[2]);
                     if (events.size() != 0) {
                         PrintExtraEvents(events);
@@ -197,7 +199,7 @@ public class Main {
                                 tag = 2;
                                 break;
                         }
-                        ArrayList<Event> events1 = timeTable.searchExtraTag(tag, Date.valueOf(args[2]), Date.valueOf(args[3]));
+                        ArrayList<Event> events1 = timeTable.searchExtraTag(tag, convertStringToDate(args[2]), convertStringToDate(args[3]));
                         pw.println("SearchExtraByTag "+args[1]+" "+args[2]+" "+args[3]);
                         if (events1.size() != 0) {
                             PrintExtraEvents(events1);
@@ -215,7 +217,7 @@ public class Main {
                                 tag = 2;
                                 break;
                         }
-                        ArrayList<Event> events1 = timeTable.searchExtraTag(tag, Date.valueOf("1970-01-01"), Date.valueOf("2100-01-01"));
+                        ArrayList<Event> events1 = timeTable.searchExtraTag(tag, convertStringToDate("1970-01-01"), convertStringToDate("2100-01-01"));
                         pw.println("SearchExtraByTag "+args[1]);
                         if (events1.size() != 0) {
                             PrintExtraEvents(events1);
@@ -263,7 +265,7 @@ public class Main {
                     switch (Type) {
                         case "课外活动":
                             type = 2;
-                            ArrayList<Event> SearchResult = timeTable.searchExtraName(Name, Date.valueOf(StartTime), Date.valueOf(EndTime));
+                            ArrayList<Event> SearchResult = timeTable.searchExtraName(Name, convertStringToDate(StartTime), convertStringToDate(EndTime));
                             if (SearchResult.size() != 0) {
                                 for (Event event : SearchResult) {
                                     Clock.addClock(event, clockType);
@@ -278,7 +280,7 @@ public class Main {
                             break;
                         case "临时事务":
                             type = 3;
-                            ArrayList<Event> SearchResult2 = timeTable.searchTempoName(Name, Date.valueOf(StartTime), Date.valueOf(EndTime));
+                            ArrayList<Event> SearchResult2 = timeTable.searchTempoName(Name, convertStringToDate(StartTime), convertStringToDate(EndTime));
                             if (SearchResult2.size() != 0) {
                                 for (Event event : SearchResult2) {
                                     Clock.addClock(event, clockType);
@@ -299,7 +301,7 @@ public class Main {
                         if (args[5].equals("daily")) {
                             int cycleLast = Integer.parseInt(args[6]);
                             Calendar c = Calendar.getInstance();
-                            c.setTime(Date.valueOf(args[4]));
+                            c.setTime(convertStringToDate(args[4]));
                             for (int i = 0; i < cycleLast; i++) {
                                 System.out.println(c.getTime() + ":");
                                 if (args[7].equals("个人活动")) {
@@ -364,7 +366,7 @@ public class Main {
                             }
                         } else if (args[5].equals("once")) {
                             if (args[6].equals("个人活动")) {
-                                int ret = Student.addExtra(args[1], null, Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), args[3]);
+                                int ret = Student.addExtra(args[1], null, convertStringToDate(args[4]), 1, 2, 1, 1, Student.getSid(), args[3]);
                                 if (ret != -1) {
                                     if (ret == 1) {
                                         System.out.println("添加成功");
@@ -376,8 +378,8 @@ public class Main {
                                 } else {
                                     System.out.println("添加失败");
                                     pw.println("添加失败");
-                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                    if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                         System.out.println("可用时间段：");
                                         pw.println("可用时间段：");
                                         for (java.util.Date date : availableTime) {
@@ -390,7 +392,7 @@ public class Main {
                                     }
                                 }
                             } else if (args[6].equals("集体活动")) {
-                                int ret = Student.addExtra(args[1], null, Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), args[3]);
+                                int ret = Student.addExtra(args[1], null, convertStringToDate(args[4]), 2, 2, 1, 1, Student.getSid(), args[3]);
                                 if (ret != -1) {
                                     if (ret == 1) {
                                         System.out.println("添加成功");
@@ -402,8 +404,8 @@ public class Main {
                                 } else {
                                     System.out.println("添加失败");
                                     pw.println("添加失败");
-                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                    if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                         System.out.println("可用时间段：");
                                         pw.println("可用时间段：");
                                         for (java.util.Date date : availableTime) {
@@ -411,7 +413,7 @@ public class Main {
                                             pw.println(date);
                                         }
                                     } else {
-                                        ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                        ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(convertStringToDate(args[4]));
                                         System.out.println("无可用时间段，打印三个使用最少的时间段：");
                                         pw.println("无可用时间段，打印三个使用最少的时间段：");
                                         for (java.util.Date date : availableTime2) {
@@ -425,7 +427,7 @@ public class Main {
                             int weeklast = Integer.parseInt(args[6]);
                             if (args[7].equals("个人活动")) {
                                 for (int i = 0; i < weeklast; i++) {
-                                    int ret = Student.addExtra(args[1], null, Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), args[3]);
+                                    int ret = Student.addExtra(args[1], null, convertStringToDate(args[4]), 1, 2, 1, 1, Student.getSid(), args[3]);
                                     if (ret != -1) {
                                         if (ret == 1) {
                                             System.out.println("添加成功");
@@ -437,8 +439,8 @@ public class Main {
                                     } else {
                                         System.out.println("添加失败");
                                         pw.println("添加失败");
-                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                        if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                             System.out.println("可用时间段：");
                                             pw.println("可用时间段：");
                                             for (java.util.Date date : availableTime) {
@@ -454,7 +456,7 @@ public class Main {
                                 }
                             } else if (args[7].equals("集体活动")) {
                                 for (int i = 0; i < weeklast; i++) {
-                                    int ret = Student.addExtra(args[1], null, Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), args[3]);
+                                    int ret = Student.addExtra(args[1], null, convertStringToDate(args[4]), 2, 2, 1, 1, Student.getSid(), args[3]);
                                     if (ret != -1) {
                                         if (ret == 1) {
                                             System.out.println("添加成功");
@@ -466,8 +468,8 @@ public class Main {
                                     } else {
                                         System.out.println("添加失败");
                                         pw.println("添加失败");
-                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                        if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                             System.out.println("可用时间段：");
                                             pw.println("可用时间段：");
                                             for (java.util.Date date : availableTime) {
@@ -475,7 +477,7 @@ public class Main {
                                                 pw.println(date);
                                             }
                                         } else {
-                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(convertStringToDate(args[4]));
                                             System.out.println("无可用时间段，打印三个使用最少的时间段：");
                                             pw.println("无可用时间段，打印三个使用最少的时间段：");
                                             for (java.util.Date date : availableTime2) {
@@ -493,7 +495,7 @@ public class Main {
                         if (args[5].equals("daily")) {
                             int cycleLast = Integer.parseInt(args[6]);
                             Calendar c = Calendar.getInstance();
-                            c.setTime(Date.valueOf(args[4]));
+                            c.setTime(convertStringToDate(args[4]));
                             for (int i = 0; i < cycleLast; i++) {
                                 System.out.println(c.getTime() + ":");
                                 if (args[7].equals("个人活动")) {
@@ -557,7 +559,7 @@ public class Main {
                             }
                         } else if (args[5].equals("once")) {
                             if (args[6].equals("个人活动")) {
-                                int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), null);
+                                int ret = Student.addExtra(args[1], args[3], convertStringToDate(args[4]), 1, 2, 1, 1, Student.getSid(), null);
                                 if (ret != -1) {
                                     if (ret == 1) {
                                         System.out.println("添加成功");
@@ -569,8 +571,8 @@ public class Main {
                                 } else {
                                     System.out.println("添加失败");
                                     pw.println("添加失败");
-                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                    if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                         System.out.println("可用时间段：");
                                         pw.println("可用时间段：");
                                         for (java.util.Date date : availableTime) {
@@ -583,7 +585,7 @@ public class Main {
                                     }
                                 }
                             } else if (args[6].equals("集体活动")) {
-                                int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), null);
+                                int ret = Student.addExtra(args[1], args[3], convertStringToDate(args[4]), 2, 2, 1, 1, Student.getSid(), null);
                                 if (ret != -1) {
                                     if (ret == 1) {
                                         System.out.println("添加成功");
@@ -595,15 +597,15 @@ public class Main {
                                 } else {
                                     System.out.println("添加失败");
                                     pw.println("添加失败");
-                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                    if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                    ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                    if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                         System.out.println("可用时间段：");
                                         pw.println("可用时间段：");
                                         for (java.util.Date date : availableTime) {
                                             System.out.println(date);
                                         }
                                     } else {
-                                        ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                        ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(convertStringToDate(args[4]));
                                         System.out.println("无可用时间段，打印三个使用最少的时间段：");
                                         pw.println("无可用时间段，打印三个使用最少的时间段：");
                                         for (java.util.Date date : availableTime2) {
@@ -616,7 +618,7 @@ public class Main {
                             int weeklast = Integer.parseInt(args[6]);
                             if (args[7].equals("个人活动")) {
                                 for (int i = 0; i < weeklast; i++) {
-                                    int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 1, 2, 1, 1, Student.getSid(), null);
+                                    int ret = Student.addExtra(args[1], args[3], convertStringToDate(args[4]), 1, 2, 1, 1, Student.getSid(), null);
                                     if (ret != -1) {
                                         if (ret == 1) {
                                             System.out.println("添加成功");
@@ -627,8 +629,8 @@ public class Main {
                                         }
                                     } else {
                                         System.out.println("添加失败");
-                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                        if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                             System.out.println("可用时间段：");
                                             pw.println("可用时间段：");
                                             for (java.util.Date date : availableTime) {
@@ -644,7 +646,7 @@ public class Main {
                                 }
                             } else if (args[7].equals("集体活动")) {
                                 for (int i = 0; i < weeklast; i++) {
-                                    int ret = Student.addExtra(args[1], args[3], Date.valueOf(args[4]), 2, 2, 1, 1, Student.getSid(), null);
+                                    int ret = Student.addExtra(args[1], args[3], convertStringToDate(args[4]), 2, 2, 1, 1, Student.getSid(), null);
                                     if (ret != -1) {
                                         if (ret == 1) {
                                             System.out.println("添加成功");
@@ -656,8 +658,8 @@ public class Main {
                                     } else {
                                         System.out.println("添加失败");
                                         pw.println("添加失败");
-                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(Date.valueOf(args[4]));
-                                        if (timeTable.searchAvailable(Date.valueOf(args[4])).size() != 0) {
+                                        ArrayList<java.util.Date> availableTime = timeTable.searchAvailable(convertStringToDate(args[4]));
+                                        if (timeTable.searchAvailable(convertStringToDate(args[4])).size() != 0) {
                                             System.out.println("可用时间段：");
                                             pw.println("可用时间段：");
                                             for (java.util.Date date : availableTime) {
@@ -665,7 +667,7 @@ public class Main {
                                                 pw.println(date);
                                             }
                                         } else {
-                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(Date.valueOf(args[4]));
+                                            ArrayList<java.util.Date> availableTime2 = timeTable.searchLeastUsedTime(convertStringToDate(args[4]));
                                             System.out.println("无可用时间段，打印三个使用最少的时间段：");
                                             pw.println("无可用时间段，打印三个使用最少的时间段：");
                                             for (java.util.Date date : availableTime2) {
@@ -682,7 +684,7 @@ public class Main {
                 case "AddTempo":
                     /*AddTempo [name]  [start_time](format:yyyy-mm-ll)  [location]*/
                     pw.println("AddTempo "+args[1]+" "+args[2]+" "+args[3]);
-                    if(Student.addTempo(args[1], args[3], Date.valueOf(args[2]), 0, 3, 0, 1, Student.getSid(), null)){
+                    if(Student.addTempo(args[1], args[3], convertStringToDate(args[2]), 0, 3, 0, 1, Student.getSid(), null)){
                         System.out.println("添加成功");
                         pw.println("添加成功");
                     } else  {
@@ -691,9 +693,9 @@ public class Main {
                     }
                     break;
                 case "SearchTempoByName":
-                    /*SearchTempoByTime [name] [start_time](format:yyyy-mm-ll)  [end_time](format:yyyy-mm-ll)*/
+                    /*SearchTempoByName [name] [start_time](format:yyyy-mm-ll)  [end_time](format:yyyy-mm-ll)*/
                     pw.println("SearchTempoByName "+args[1]+" "+args[2]+" "+args[3]);
-                    ArrayList<Event> SearchResult3 = timeTable.searchTempoName(args[1], Date.valueOf(args[2]), Date.valueOf(args[3]));
+                    ArrayList<Event> SearchResult3 = timeTable.searchTempoName(args[1], convertStringToDate(args[2]), convertStringToDate(args[3]));
                 if(SearchResult3.size()!=0){
                     for (Event event : SearchResult3) {
                         System.out.println("Tempo:");
@@ -713,7 +715,7 @@ public class Main {
                     break;
                 case "SearchTempoByTime":
                     /*SearchTempoByTime [start_time](format:yyyy-mm-ll)  [end_time](format:yyyy-mm-ll)*/
-                    ArrayList<Event> SearchResult4 = timeTable.displayTempo(Date.valueOf(args[1]), Date.valueOf(args[2]));
+                    ArrayList<Event> SearchResult4 = timeTable.displayTempo(convertStringToDate(args[1]), convertStringToDate(args[2]));
                     pw.println("SearchTempoByTime "+args[1]+" "+args[2]);
                 if(SearchResult4.size()!=0){
                     for (Event event : SearchResult4) {
@@ -742,7 +744,7 @@ public class Main {
                     pw.println("请输入要删除的课外活动的结束时间");
                     String end_time = input.nextLine();
                     pw.println(end_time);
-                    Student.removeExtra(Date.valueOf(start_time), Date.valueOf(end_time), name,Student.getSid());
+                    Student.removeExtra(convertStringToDate(start_time), convertStringToDate(end_time), name,Student.getSid());
                     break;
                 case "deleteTempo":
                     pw.println("deleteTempo");
@@ -758,7 +760,7 @@ public class Main {
                     pw.println("请输入要删除的临时事务的结束时间");
                     String end_time2 = input.nextLine();
                     pw.println(end_time2);
-                    Student.removeTempo(Date.valueOf(start_time2), Date.valueOf(end_time2), name2,Student.getSid());
+                    Student.removeTempo(convertStringToDate(start_time2), convertStringToDate(end_time2), name2,Student.getSid());
                     break;
                 case "updateExtra":
                     pw.println("updateExtra");
@@ -796,7 +798,7 @@ public class Main {
                         pw.println("请输入新活动的链接");
                         String link = input.nextLine();
                         pw.println(link);
-                        if(Student.updateExtra(Date.valueOf(start_time3),  name3,null,Student.getSid(),tag,link)){
+                        if(Student.updateExtra(convertStringToDate(start_time3),  name3,null,Student.getSid(),tag,link)){
                             System.out.println("更新成功");
                             pw.println("更新成功");
                         }else {
@@ -809,7 +811,7 @@ public class Main {
                         pw.println("请输入新活动的地点");
                         String location = input.nextLine();
                         pw.println(location);
-                       if( Student.updateExtra(Date.valueOf(start_time3),  name3,location,Student.getSid(),tag,null)){
+                       if( Student.updateExtra(convertStringToDate(start_time3),  name3,location,Student.getSid(),tag,null)){
                             System.out.println("更新成功");
                             pw.println("更新成功");
                        }else{
@@ -839,7 +841,7 @@ public class Main {
                     pw.println("请输入临时事务的新地址:");
                     String location2 = input.nextLine();
                     pw.println(location2);
-                    if(Student.updateTempo(Date.valueOf(start_time4),  name4,newname,location2,Student.getSid(),0,null)) {
+                    if(Student.updateTempo(convertStringToDate(start_time4),  name4,newname,location2,Student.getSid(),0,null)) {
                         System.out.println("更新成功");
                         pw.println("更新成功");
                     }else{
@@ -960,7 +962,9 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        log.setWritable(true);
+        if (!log.exists()){
+            log.createNewFile();
+        }
         OutputStream out = new FileOutputStream(log);
         pw = new PrintWriter(out);
         time.TimeStart();
@@ -971,5 +975,15 @@ public class Main {
         pw.close();
         out.close();
         exit(0);
+    }
+    public static Date convertStringToDate(String s){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
+        Date date = null;
+        try {
+            date = new Date(sdf.parse(s).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }
