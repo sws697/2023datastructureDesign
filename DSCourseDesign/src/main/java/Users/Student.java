@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 
-
 /**
  * 学生类，提供登录，查询等接口
  *
@@ -268,21 +267,28 @@ public class Student {
      * @param sid
      */
     public static void removeExtra(Date startTime, Date endTime, String name, int sid) {
-        timeTable.removeExtra(name, startTime, endTime);
-        SqlSession sesssion = GetSession.getSesssion();
-        StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
-        mapper.deleteExtra(name, sid);
-        sesssion.commit();
-        sesssion.close();
+
+        if(timeTable.removeExtra(name, startTime, endTime)!=-1){
+            SqlSession sesssion = GetSession.getSesssion();
+            StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
+            mapper.deleteExtra(name, sid);
+            sesssion.commit();
+            sesssion.close();
+        }else{
+            System.out.println("删除失败");
+        }
     }
 
     public static void removeTempo(Date startTime, Date endTime, String name, int sid) {
-        timeTable.removeTempo(name, startTime, endTime);
-        SqlSession sesssion = GetSession.getSesssion();
-        StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
-        mapper.deleteTempo(name, sid);
-        sesssion.commit();
-        sesssion.close();
+        if(timeTable.removeTempo(name, startTime, endTime)!=-1) {
+            SqlSession sesssion = GetSession.getSesssion();
+            StudentMapper mapper = sesssion.getMapper(StudentMapper.class);
+            mapper.deleteTempo(name, sid);
+            sesssion.commit();
+            sesssion.close();
+        }else{
+            System.out.println("删除失败");
+        }
     }
 
     public static void graphInit() {
@@ -299,6 +305,9 @@ public class Student {
         graph.initShortestPath();
     }
 
+    public static String getLocation(){
+        return location;
+    }
 
     @Override
     public int hashCode() {

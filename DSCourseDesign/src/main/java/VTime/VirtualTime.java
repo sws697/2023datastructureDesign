@@ -1,8 +1,11 @@
 package VTime;
 
 
+import GUI.NavigationGUI;
+import Graph.Graph;
 import Graph.Node;
 import TimeTable.Event;
+import TimeTable.Tempo;
 import Users.Student;
 
 
@@ -186,10 +189,30 @@ public class VirtualTime {
                 if (currentEvent.getName().equals(nextEvent.getName())) {
                     System.out.println("同一门课的不同时间段");
                 } else {
-                    System.out.println("下一门课是" + nextEvent);
+                    System.out.println("下一门课是" + nextEvent.getName());
+                    if(nextEvent.getLocation()!=null){
+                        Graph graph = new Graph();
+                        ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
+                        NavigationGUI navigationGUI = new NavigationGUI(path);
+                    }else if (nextEvent.getLink()!=null) {
+                        String url = nextEvent.getLink();
+                        String[] temp= url.split(".");
+                        System.out.println("课程平台为"+temp[1]);
+                        System.out.println("课程链接为" + nextEvent.getLink());
+                    }
                 }
             } else {
-                System.out.println("下一门课是" + nextEvent);
+                System.out.println("下一门课是" + nextEvent.getName());
+                if(nextEvent.getLocation()!=null){
+                    Graph graph = new Graph();
+                    ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
+                    NavigationGUI navigationGUI = new NavigationGUI(path);
+                } else if (nextEvent.getLink()!=null) {
+                    String url = nextEvent.getLink();
+                    String[] temp= url.split(".");
+                   System.out.println("课程平台为"+temp[1]);
+                    System.out.println("课程链接为" + nextEvent.getLink());
+                }
             }
 
         }
@@ -203,9 +226,28 @@ public class VirtualTime {
             ArrayList<Event> events = Student.getTimeTable().displayExtra(startTime, endTime);
             Event event = events.get(0);
             if (event.getType() == 2) {
-                System.out.println("当前课外活动为: " + event.getName());
-            } else {
-                System.out.println("当前临时事务为: " + event.getTempo());
+                System.out.println(calendar.getTime()+"当前课外活动为: " + event.getName());
+                if(event.getLocation()!=null) {
+                    Graph graph = new Graph();
+                    ArrayList<Node> path = graph.shortestPath(Student.getLocation(), event.getLocation());
+                    NavigationGUI navigationGUI = new NavigationGUI(path);
+                }else if (event.getLink()!=null) {
+                    String url = event.getLink();
+                    String[] temp= url.split(".");
+                    System.out.println("线上平台为"+temp[1]);
+                    System.out.println("线上活动链接为" + event.getLink());
+                }
+            } else if (event.getType()==3) {
+                System.out.println(calendar.getTime()+" 当前临时事务:");
+                ArrayList<Tempo> tempos = event.getTempo();
+                ArrayList<String> tempoNames = new ArrayList<>();
+                for(Tempo tempo:tempos){
+                    tempoNames.add(tempo.name);
+                    System.out.println(tempo.name+" "+tempo.location);
+                }
+                Graph graph = new Graph();
+                ArrayList<Node> path = graph.pathByTheWay(Student.getLocation(), tempoNames);
+                NavigationGUI navigationGUI = new NavigationGUI(path);
             }
         }
 
@@ -213,13 +255,17 @@ public class VirtualTime {
         if (VirtualTime.getHours() == 22) {
             ArrayList<Event> events = Student.DailyExtraRemind();
             System.out.println("明天的课外活动为：");
-            System.out.println(events);
+            for(Event event:events){
+                System.out.println(event.getTime()+event.getName());
+            }
         }
 
         if (VirtualTime.getHours() == 23) {
             ArrayList<Event> events = Student.DailyCourseRemind();
             System.out.println("明天的课程为：");
-            System.out.println(events);
+            for(Event event:events){
+                System.out.println(event.getTime()+event.getName());
+            }
         }
     }
 
