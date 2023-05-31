@@ -30,8 +30,10 @@ public class VirtualTime {
     boolean isDo = false;
 
     public static Calendar getCalendar() {
-        return calendar;
+        Calendar newCalendar  = (Calendar) calendar.clone();
+        return newCalendar;
     }
+
 
     /**
      * 目前的构造方法默认时间为2023.2.18，后续可能变成读取上次系统关闭时候的时间
