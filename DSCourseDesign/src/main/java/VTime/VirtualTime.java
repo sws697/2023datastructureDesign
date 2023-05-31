@@ -191,7 +191,6 @@ public class VirtualTime {
      * 这只是第一个版本，可能根据需求再改
      */
     public void HourlyTask() {
-        System.out.println(getHours());
         if(getHours()==0){
             System.out.println(getTime());
             pw.println(getTime());
