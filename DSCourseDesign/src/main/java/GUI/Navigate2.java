@@ -41,7 +41,7 @@ public class Navigate2 {
 
 
         frame = new JFrame("导航" );
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
 
         BufferedImage image = null;

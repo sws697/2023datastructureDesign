@@ -30,4 +30,7 @@
     <select id="select" resultType="Users.Student">
         select * from dsdesign.student where student.sid=#{id} and password=#{password}
     </select>
+    <select id="getAllStu" resultType="Users.tool.StuForRec">
+    select * from student;
+    </select>
 </mapper>

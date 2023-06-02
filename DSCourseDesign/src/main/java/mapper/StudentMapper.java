@@ -1,13 +1,16 @@
 package mapper;
 
 import Users.Student;
+import Users.tool.StuForRec;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public interface StudentMapper {
 
      Student select(@Param("id") int id, @Param("password") String password);
+     ArrayList<StuForRec> getAllStu();
      void addExtra(@Param("name") String name, @Param("location") String location,
                    @Param("startTime") Date startTime, @Param("tag") int tag,
                    @Param("type") int type, @Param("weekLast") int weekLast,

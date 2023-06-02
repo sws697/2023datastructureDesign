@@ -1,7 +1,7 @@
 package VTime;
 
 
-import GUI.Navigate2;
+import GUI.*;
 import Graph.Graph;
 import Graph.Node;
 import TimeTable.Event;
@@ -219,11 +219,12 @@ public class VirtualTime {
                             System.out.print(node.getName()+"->");
                             pw.print(node.getName()+"->");
                         }
-                        Navigate2 navigate2 = new Navigate2(path);
-//                        NavigationGUI navigationGUI = new NavigationGUI(path);
+//                        Navigate2 navigate2GUI = new Navigate2(path);
+                        path.add(path.get(path.size()-1));
+                        NavigationGUI navigationGUI = new NavigationGUI(path);
                     }else if (nextEvent.getLink()!=null) {
                         String url = nextEvent.getLink();
-                        String[] temp= url.split(".");
+                        String[] temp= url.split("\\.");
                         System.out.println("课程平台为"+temp[1]);
                         System.out.println("课程链接为" + nextEvent.getLink());
                         pw.println("课程平台为"+temp[1]);
@@ -241,11 +242,12 @@ public class VirtualTime {
                         pw.print(path.get(i).getName()+"->");
                     }
                     System.out.println(path.get(path.size()-1).getName());
-                    Navigate2 navigate2 = new Navigate2(path);
-//                    NavigationGUI navigationGUI = new NavigationGUI(path);
+//                        Navigate2 navigate2GUI = new Navigate2(path);
+                    path.add(path.get(path.size()-1));
+                    NavigationGUI navigationGUI = new NavigationGUI(path);
                 } else if (nextEvent.getLink()!=null) {
                     String url = nextEvent.getLink();
-                    String[] temp= url.split(".");
+                    String[] temp= url.split("\\.");
                    System.out.println("课程平台为"+temp[1]);
                    pw.println("课程平台为"+temp[1]);
                     System.out.println("课程链接为" + nextEvent.getLink());
@@ -273,10 +275,12 @@ public class VirtualTime {
                         System.out.print(node.getName()+"->");
                         pw.print(node.getName()+"->");
                     }
-//                    NavigationGUI navigationGUI = new NavigationGUI(path);
+//                        Navigate2 navigate2GUI = new Navigate2(path);
+                    path.add(path.get(path.size()-1));
+                    NavigationGUI navigationGUI = new NavigationGUI(path);
                 }else if (event.getLink()!=null) {
                     String url = event.getLink();
-                    String[] temp= url.split(".");
+                    String[] temp= url.split("\\.");
                     System.out.println("线上平台为"+temp[1]);
                     System.out.println("线上活动链接为" + event.getLink());
                 }
@@ -299,7 +303,9 @@ public class VirtualTime {
                 }
                 System.out.println(path.get(path.size()-1).getName());
                 pw.println(path.get(path.size()-1).getName());
-//                NavigationGUI navigationGUI = new NavigationGUI(path);
+//                        Navigate2 navigate2GUI = new Navigate2(path);
+                path.add(path.get(path.size()-1));
+                NavigationGUI navigationGUI = new NavigationGUI(path);
             }
         }
 
@@ -320,5 +326,9 @@ public class VirtualTime {
                 System.out.println(event.getTime()+event.getName());
             }
         }
+        /**
+         * 执行完本小时改执行的所有内容后，再次查询本小时应该在哪完成日程，更改学生所在地
+         */
+        Student.changeLocation(getTime());
     }
 }
