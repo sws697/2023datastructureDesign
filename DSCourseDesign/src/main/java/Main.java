@@ -947,6 +947,8 @@ public class Main {
                     case "admin":
                         Admin admin = new Admin();
                         if (admin.login(args[2], args[3])) {
+                            pw.println("login admin success");
+                            System.out.println("管理员登录成功");
                             AdminMode(admin);
                         } else {
                             pw.println("login admin failed");
