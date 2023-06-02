@@ -24,4 +24,11 @@
     <delete id="removeCourse">
         delete from event where sid=#{sid} and name=#{name}
     </delete>
+    <select id="getEvent" resultType="Users.tool.EventForRec">
+        select * from event where name = #{name}
+    </select>
+    <select id="getEventById" resultType="Users.tool.EventForRec">
+        select * from event where sid = #{sid}
+    </select>
+
 </mapper>

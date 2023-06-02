@@ -1,7 +1,10 @@
 package mapper;
 
+import Users.Student;
+import Users.tool.EventForRec;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public interface AdminMapper {
@@ -13,4 +16,8 @@ public interface AdminMapper {
                    @Param("link") String link);
     void removeCourse(@Param("name") String name,@Param("sid") int sid);
     void updateCourseLocation(@Param("name")String name,@Param("Location")String Location);
-    void updateCourseStartTime(@Param("name")String name,@Param("startTime")Date startTime);}
+    void updateCourseStartTime(@Param("name")String name,@Param("startTime")Date startTime);
+    ArrayList<EventForRec> getEvent(@Param("name") String name);
+    ArrayList<EventForRec> getEventById(@Param("sid") int sid);
+
+}

@@ -32,9 +32,10 @@ public class Student {
      */
     private static String location;
 
-    private static TimeTable timeTable = new TimeTable(new Date(70, 1, 17), new Date(200, 5, 19));
+    public static TimeTable timeTable = new TimeTable(new Date(70, 1,
+            17), new Date(200, 5, 19));
 
-    private static Graph graph = new Graph();
+    public static Graph graph = new Graph();
 
     /**
      * @return 返回当前系统用户Id（学号）
