@@ -76,7 +76,7 @@ public class Student {
         if (student != null) {
             Student.sid = id;
             Student.password = password;
-            Student.setLocation("学五");
+            Student.setLocation(student.getLocation());
             splayInit(Student.sid);
             graphInit();
             return true;

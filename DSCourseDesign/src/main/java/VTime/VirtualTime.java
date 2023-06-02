@@ -136,7 +136,7 @@ public class VirtualTime {
      */
     public void TimeStart(int year, int month, int day, int hour) throws FileNotFoundException {
         calendar.set(year, month - 1, day, hour, 0, 0);
-        OutputStream out = new FileOutputStream(log);
+        OutputStream out = new FileOutputStream(log, true);
         pw = new PrintWriter(out);
         timer.scheduleAtFixedRate(new MyTimerTask(), (long) rate * 1000, (long) rate * 1000);
     }
@@ -145,7 +145,7 @@ public class VirtualTime {
      * 开启定时器，空参构造表示以默认时间开启，后续可能升级为从数据库读取上次时间
      */
     public void TimeStart() throws FileNotFoundException {
-        OutputStream out = new FileOutputStream(log);
+        OutputStream out = new FileOutputStream(log, true);
         pw = new PrintWriter(out);
         this.TimeStart(2023, 2, 18, 0);
     }

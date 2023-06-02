@@ -25,7 +25,7 @@ public class Main {
         pw.println(s);
         pw.flush();
     }
-    public static void AdminMode(Admin admin) {
+    public static void AdminMode(Admin admin) throws InterruptedException, FileNotFoundException {
         while (true) {
             String[] args = input.nextLine().split("\\s+");
             switch (args[0]) {
@@ -115,6 +115,14 @@ public class Main {
                     System.out.println("Please enter the new location");
                     String newLocation = input.nextLine();
                     admin.updateCourseLocation(name1, newLocation);
+                    break;
+                case "pause":
+                    pw.println("time:pause");
+                    time.pause();
+                    break;
+                case "TimeRestart":
+                    pw.println("time:TimeRestart");
+                    time.restart();
                     break;
                 case "logout":
                     return;
@@ -973,7 +981,7 @@ public class Main {
         if (!log.exists()){
             log.createNewFile();
         }
-        OutputStream out = new FileOutputStream(log);
+        OutputStream out = new FileOutputStream(log,true);
         pw = new PrintWriter(out);
         time.TimeStart(2023,3,25,18);
         PressInstruction();
