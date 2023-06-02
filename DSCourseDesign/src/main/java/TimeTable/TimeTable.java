@@ -3,7 +3,9 @@
  */
 package TimeTable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
 
 public class TimeTable {
     final static int MAX = 1024;
@@ -31,6 +33,32 @@ public class TimeTable {
         int cnt1 = weekLast;
         int ret = 1;
 
+        while(cnt1 != 0) {//先检测冲突
+            Date date = cal.getTime();
+
+            int cnt2 = hourLast;
+            while(cnt2 != 0) {
+                Date temp = cal.getTime();
+                cal.add(Calendar.HOUR_OF_DAY, 1);
+                cnt2 --;
+                if(temp.getTime() < this.startTime.getTime() || temp.getTime() >= this.endTime.getTime())
+                    return -1;
+
+                int id = splay.find(temp);
+                if(id != -1) {//该时间戳有其他日程
+                    if (splay.node[id].type == COURSE)
+                        return -1;
+                }
+
+            }
+
+            cal.setTime(date);
+            cal.add(Calendar.DATE, 7);
+            cnt1 --;
+        }
+
+        cal.setTime(startTime);
+        cnt1 = weekLast;
         while(cnt1 != 0) {
             Date date = cal.getTime();
 
@@ -39,27 +67,21 @@ public class TimeTable {
                 Date temp = cal.getTime();
                 cal.add(Calendar.HOUR_OF_DAY, 1);
                 cnt2 --;
-                if(temp.getTime() < startTime.getTime() || temp.getTime() >= endTime.getTime()) {
-                    ret = -1;
-                    continue;
-                }
 
                 int id = splay.find(temp);
                 if(id != -1) {//该时间戳有其他日程
                     if (splay.node[id].type != COURSE)//不是其他课程, 可以占用
                         splay.remove(temp);
-                    ret = -1;
                 }
 
-                int ret2 = splay.insert(name, temp, location, link, COURSE, tag);//若该时间点有其他课程则不会插入
-                if(ret2 == -1) ret = ret2;
+                splay.insert(name, temp, location, link, COURSE, tag);//若该时间点有其他课程则不会插入
             }
 
             cal.setTime(date);
             cal.add(Calendar.DATE, 7);
             cnt1 --;
         }
-        return ret;
+        return 1;
     }
 
     /** 批量加入
@@ -73,6 +95,8 @@ public class TimeTable {
         int cnt1 = weekLast;
         int ret = 1;
         if(weekLast == 1) {//单点加入的特判情况
+            if(startTime.getTime() < this.startTime.getTime() || startTime.getTime() >= this.endTime.getTime())
+                return -1;
             if(splay.search(startTime) == null) {
                 splay.insert(name, startTime, location, link, EXTRA, tag);
             }
@@ -88,26 +112,38 @@ public class TimeTable {
             return ret;
         }
 
+
         while(cnt1 != 0) {
             Date temp = cal.getTime();
             cal.add(Calendar.DATE, 7);
             cnt1 --;
-            if(temp.getTime() < startTime.getTime() || temp.getTime() >= endTime.getTime()) {
-                ret = -1;
-                continue;
+            if(temp.getTime() < this.startTime.getTime() || temp.getTime() >= this.endTime.getTime())
+                return -1;
+
+            int id = splay.find(temp);
+            if(id != -1) {//该时间戳有其他日程
+                if (splay.node[id].type != TEMPO)//不是临时事务，无法覆盖
+                    return -1;
             }
+
+        }
+
+        cal.setTime(startTime);
+        cnt1 = weekLast;
+        while(cnt1 != 0) {
+            Date temp = cal.getTime();
+            cal.add(Calendar.DATE, 7);
+            cnt1 --;
 
             int id = splay.find(temp);
             if(id != -1) {//该时间戳有其他日程
                 if (splay.node[id].type == TEMPO)//是临时事务, 可以占用
                     splay.remove(temp);
-                ret = -1;
             }
 
-            int ret2 = splay.insert(name, temp, location, link, EXTRA, tag);
-            if(ret2 == -1) ret = ret2;
+            splay.insert(name, temp, location, link, EXTRA, tag);
         }
-        return ret;
+        return 1;
     }
 
     /** 单点加入
@@ -116,7 +152,7 @@ public class TimeTable {
      * 若平衡树满则停止加入, 并返回-1
      */
     public int addTempo(String name, Date time, String location) {
-        if(time.getTime() < startTime.getTime() || time.getTime() >= endTime.getTime())
+        if(time.getTime() < this.startTime.getTime() || time.getTime() >= this.endTime.getTime())
             return -1;
         int ret = splay.insertTempo(name, time, location);
         if(ret == -1) return -1;
@@ -606,37 +642,7 @@ public class TimeTable {
         if(splay.find(time) == -1) return true;
         else return false;
     }
-    public ArrayList<Date> searchLeastUsedTime(Date time){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
-        cal.add(Calendar.HOUR_OF_DAY, -time.getHours() + 6);
-        Date d1=cal.getTime();
-        cal.add(Calendar.HOUR_OF_DAY, 16);
-        Date d2=cal.getTime();
-        ArrayList<Date> a = new ArrayList<>();
-        ArrayList<Event> events=displayAll(d1,d2);
-        Map<Integer,Event> map=new TreeMap<>();
-        for(Event event:events){
-            int cnt=0;
-            if(event.getType()!=3){
-                cnt++;
 
-            }else{
-                cnt+=event.getTempo().size();
-            }
-            map.put(cnt,event);
-        }
-        int cnt1=0;
-        for(Map.Entry<Integer,Event> entry:map.entrySet()){
-            if(cnt1<3){
-                a.add(entry.getValue().getTime());
-            }else{
-                break;
-            }
-            cnt1++;
-        }
-        return a;
-    }
     public ArrayList<Date> searchAvailable(Date time) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
