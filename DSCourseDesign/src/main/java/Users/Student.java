@@ -76,7 +76,7 @@ public class Student {
         if (student != null) {
             Student.sid = id;
             Student.password = password;
-            Student.setLocation("DOR5");
+            Student.setLocation("学五");
             splayInit(Student.sid);
             graphInit();
             return true;
@@ -160,16 +160,17 @@ public class Student {
      *
      * @return
      */
+    //login student 2021211114 12345
     public static Event CourseAdvanceRemind() {
         Calendar calendar = VirtualTime.getCalendar();
-        calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 1);
+        calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours()+1);
         Date startTime = calendar.getTime();
         calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 4);
         Date endTime = calendar.getTime();
         ArrayList<Event> events = timeTable.displayCourse(startTime, endTime);
         if (events.size() != 0){
             Event event = events.get(0);
-            if (event.getTime().equals(startTime)) {
+            if (event.getTime().getHours()==startTime.getHours()) {
                 return event;
             } else {
                 return null;
@@ -187,13 +188,17 @@ public class Student {
         Calendar calendar = VirtualTime.getCalendar();
         calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours());
         Date startTime = calendar.getTime();
-        calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 1);
+        calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours()+1);
         Date endTime = calendar.getTime();
         ArrayList<Event> events = timeTable.displayCourse(startTime, endTime);
-        Event event = events.get(0);
-        if (event.getTime().equals(startTime)) {
-            return event;
-        } else {
+        if(events.size()!=0){
+            Event event = events.get(0);
+            if (event.getTime().equals(startTime)) {
+                return event;
+            } else {
+                return null;
+            }
+        }else{
             return null;
         }
     }
@@ -298,6 +303,7 @@ public class Student {
         ArrayList<Road> roads = mapper.getRoads();
         for(Node node:nodes){
             graph.createBuilding(node.getName());
+            graph.setxy(node.getName(),node.getX(),node.getY());
         }
         for(Road road:roads){
             graph.createRoad(road.getName1(),road.getName2(),road.getLen());
@@ -314,4 +320,7 @@ public class Student {
         return sid.hashCode();
     }
 
+    public static Graph getGraph() {
+        return graph;
+    }
 }

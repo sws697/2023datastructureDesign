@@ -115,7 +115,6 @@ public class Graph {
                     dis[ edge[i].to ] = dis[u.first] + edge[i].len;
                     pair v = new pair(edge[i].to, dis[ edge[i].to ]);
                     q.add(v);
-
                     last[edge[i].to] = u.first;//last数组协助求出最短路径
                 }
             }
@@ -155,6 +154,13 @@ public class Graph {
         else return 1;
     }
 
+    public int setxy(String name, int x, int y) {
+        int id = hashtable.get(name);
+        if(id == -1) return -1;
+        node[id].x = x;
+        node[id].y = y;
+        return 1;
+    }
     /**
      * 在名称为name1的建筑物 和 名称为name2的建筑物之间建立长度为len的道路
      * 若存在不合法名称或len为负数则返回-1
