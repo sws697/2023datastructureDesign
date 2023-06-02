@@ -323,4 +323,20 @@ public class Student {
     public static Graph getGraph() {
         return graph;
     }
+
+
+    public static void changeLocation(Date startTime){
+        long endMill = startTime.getTime();
+        endMill+=3600000;
+        Date endTime = new Date(endMill);
+        ArrayList<Event> events = timeTable.displayAll(startTime, endTime);
+        if(events.size()!=0){
+            Event event = events.get(0);
+            if(event.getType()==1||event.getType()==2){
+                Student.setLocation(event.getLocation());
+            }
+        }
+
+
+    }
 }

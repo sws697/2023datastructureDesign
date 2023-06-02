@@ -19,7 +19,7 @@ import java.util.*;
  * @version 1.0
  */
 public class VirtualTime {
-    private static  Calendar calendar = Calendar.getInstance();//用日历表示时间
+    private static Calendar calendar = Calendar.getInstance();//用日历表示时间
     private static int rate = 2;//现实时间rate秒=虚拟时间1小时
     private Timer timer = new Timer();//定时器
     private int count = 1;//临时变量,统计执行次数，定时任务做好后可以
@@ -28,10 +28,10 @@ public class VirtualTime {
     boolean isDo = false;
 
     public static Calendar getCalendar() {
-        Calendar newCalendar  = (Calendar) calendar.clone();
-        newCalendar.set(Calendar.MINUTE,0);
-        newCalendar.set(Calendar.SECOND,0);
-        newCalendar.set(Calendar.MILLISECOND,0);
+        Calendar newCalendar = (Calendar) calendar.clone();
+        newCalendar.set(Calendar.MINUTE, 0);
+        newCalendar.set(Calendar.SECOND, 0);
+        newCalendar.set(Calendar.MILLISECOND, 0);
 
         return newCalendar;
     }
@@ -41,7 +41,7 @@ public class VirtualTime {
      * 目前的构造方法默认时间为2023.2.18，后续可能变成读取上次系统关闭时候的时间
      */
     public VirtualTime() {
-        calendar.set(2023, Calendar.FEBRUARY, 18, 0, 0,0);
+        calendar.set(2023, Calendar.FEBRUARY, 18, 0, 0, 0);
     }
 
     /**
@@ -97,10 +97,10 @@ public class VirtualTime {
      * @return 返回当前时间的Date对象
      */
     public static Date getTime() {
-        Calendar newCalendar  = (Calendar) calendar.clone();
-        newCalendar.set(Calendar.MINUTE,0);
-        newCalendar.set(Calendar.SECOND,0);
-        newCalendar.set(Calendar.MILLISECOND,0);
+        Calendar newCalendar = (Calendar) calendar.clone();
+        newCalendar.set(Calendar.MINUTE, 0);
+        newCalendar.set(Calendar.SECOND, 0);
+        newCalendar.set(Calendar.MILLISECOND, 0);
         return newCalendar.getTime();
 
     }
@@ -162,7 +162,7 @@ public class VirtualTime {
      */
     public void restart() throws FileNotFoundException {
         timer = new Timer();
-        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH),
+        this.TimeStart(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -198,10 +198,11 @@ public class VirtualTime {
      * 这只是第一个版本，可能根据需求再改
      */
     public void HourlyTask() {
-        if(getHours()==0){
+        if (getHours() == 0) {
             System.out.println(getTime());
             pw.println(getTime());
         }
+
         Event nextEvent = Student.CourseAdvanceRemind();
         if (nextEvent != null) {
             System.out.println(getTime());
@@ -212,42 +213,42 @@ public class VirtualTime {
                 } else {
                     System.out.println("下一门课是" + nextEvent.getName());
                     pw.println("下一门课是" + nextEvent.getName());
-                    if(nextEvent.getLocation()!=null){
+                    if (nextEvent.getLocation() != null) {
                         Graph graph = Student.getGraph();
                         ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
-                        for(Node node:path){
-                            System.out.print(node.getName()+"->");
-                            pw.print(node.getName()+"->");
+                        for (Node node : path) {
+                            System.out.print(node.getName() + "->");
+                            pw.print(node.getName() + "->");
                         }
                         Navigate2 navigate2 = new Navigate2(path);
 //                        NavigationGUI navigationGUI = new NavigationGUI(path);
-                    }else if (nextEvent.getLink()!=null) {
+                    } else if (nextEvent.getLink() != null) {
                         String url = nextEvent.getLink();
-                        String[] temp= url.split(".");
-                        System.out.println("课程平台为"+temp[1]);
+                        String[] temp = url.split(".");
+                        System.out.println("课程平台为" + temp[1]);
                         System.out.println("课程链接为" + nextEvent.getLink());
-                        pw.println("课程平台为"+temp[1]);
+                        pw.println("课程平台为" + temp[1]);
                         pw.println("课程链接为" + nextEvent.getLink());
                     }
                 }
             } else {
                 System.out.println("下一门课是" + nextEvent.getName());
                 pw.println("下一门课是" + nextEvent.getName());
-                if(nextEvent.getLocation()!=null){
+                if (nextEvent.getLocation() != null) {
                     Graph graph = Student.getGraph();
                     ArrayList<Node> path = graph.shortestPath(Student.getLocation(), nextEvent.getLocation());
-                    for(int i=0;i<path.size()-1;i++){
-                        System.out.print(path.get(i).getName()+"->");
-                        pw.print(path.get(i).getName()+"->");
+                    for (int i = 0; i < path.size() - 1; i++) {
+                        System.out.print(path.get(i).getName() + "->");
+                        pw.print(path.get(i).getName() + "->");
                     }
-                    System.out.println(path.get(path.size()-1).getName());
+                    System.out.println(path.get(path.size() - 1).getName());
                     Navigate2 navigate2 = new Navigate2(path);
 //                    NavigationGUI navigationGUI = new NavigationGUI(path);
-                } else if (nextEvent.getLink()!=null) {
+                } else if (nextEvent.getLink() != null) {
                     String url = nextEvent.getLink();
-                    String[] temp= url.split(".");
-                   System.out.println("课程平台为"+temp[1]);
-                   pw.println("课程平台为"+temp[1]);
+                    String[] temp = url.split(".");
+                    System.out.println("课程平台为" + temp[1]);
+                    pw.println("课程平台为" + temp[1]);
                     System.out.println("课程链接为" + nextEvent.getLink());
                     pw.println("课程链接为" + nextEvent.getLink());
                 }
@@ -256,49 +257,49 @@ public class VirtualTime {
 
         if (Clock.Ring()) {
             Calendar calendar = VirtualTime.getCalendar();
-            System.out.println(calendar.getTime()+"闹钟响了");
+            System.out.println(calendar.getTime() + "闹钟响了");
             calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours());
             Date startTime = calendar.getTime();
             calendar.set(Calendar.HOUR_OF_DAY, VirtualTime.getHours() + 1);
             Date endTime = calendar.getTime();
             ArrayList<Event> events = Student.getTimeTable().displayExtra(startTime, endTime);
-            ArrayList<Event> events1 =Student.getTimeTable().displayTempo(startTime,endTime);
-            if (events.size()!=0) {
+            ArrayList<Event> events1 = Student.getTimeTable().displayTempo(startTime, endTime);
+            if (events.size() != 0) {
                 Event event = events.get(0);
-                System.out.println(calendar.getTime()+"当前课外活动为: " + event.getName());
-                if(event.getLocation()!=null) {
+                System.out.println(calendar.getTime() + "当前课外活动为: " + event.getName());
+                if (event.getLocation() != null) {
                     Graph graph = Student.getGraph();
                     ArrayList<Node> path = graph.shortestPath(Student.getLocation(), event.getLocation());
-                    for(Node node:path){
-                        System.out.print(node.getName()+"->");
-                        pw.print(node.getName()+"->");
+                    for (Node node : path) {
+                        System.out.print(node.getName() + "->");
+                        pw.print(node.getName() + "->");
                     }
 //                    NavigationGUI navigationGUI = new NavigationGUI(path);
-                }else if (event.getLink()!=null) {
+                } else if (event.getLink() != null) {
                     String url = event.getLink();
-                    String[] temp= url.split(".");
-                    System.out.println("线上平台为"+temp[1]);
+                    String[] temp = url.split(".");
+                    System.out.println("线上平台为" + temp[1]);
                     System.out.println("线上活动链接为" + event.getLink());
                 }
-            } else if (events1.size()!=0) {
+            } else if (events1.size() != 0) {
                 Event event = events1.get(0);
-                System.out.println(calendar.getTime()+" 当前临时事务:");
-                pw.println(calendar.getTime()+" 当前临时事务:");
+                System.out.println(calendar.getTime() + " 当前临时事务:");
+                pw.println(calendar.getTime() + " 当前临时事务:");
                 ArrayList<Tempo> tempos = event.getTempo();
                 ArrayList<String> tempoLocations = new ArrayList<>();
-                for(Tempo tempo:tempos){
+                for (Tempo tempo : tempos) {
                     tempoLocations.add(tempo.location);
-                    System.out.println(tempo.name+" "+tempo.location);
-                    pw.println(tempo.name+" "+tempo.location);
+                    System.out.println(tempo.name + " " + tempo.location);
+                    pw.println(tempo.name + " " + tempo.location);
                 }
                 Graph graph = Student.getGraph();
                 ArrayList<Node> path = graph.pathByTheWay(Student.getLocation(), tempoLocations);
-                for(int i=0;i<path.size()-1;i++){
-                    System.out.print(path.get(i).getName()+"->");
-                    pw.print(path.get(i).getName()+"->");
+                for (int i = 0; i < path.size() - 1; i++) {
+                    System.out.print(path.get(i).getName() + "->");
+                    pw.print(path.get(i).getName() + "->");
                 }
-                System.out.println(path.get(path.size()-1).getName());
-                pw.println(path.get(path.size()-1).getName());
+                System.out.println(path.get(path.size() - 1).getName());
+                pw.println(path.get(path.size() - 1).getName());
 //                NavigationGUI navigationGUI = new NavigationGUI(path);
             }
         }
@@ -307,8 +308,8 @@ public class VirtualTime {
         if (VirtualTime.getHours() == 22) {
             ArrayList<Event> events = Student.DailyExtraRemind();
             System.out.println("明天的课外活动为：");
-            for(Event event:events){
-                System.out.println(event.getTime()+event.getName());
+            for (Event event : events) {
+                System.out.println(event.getTime() + event.getName());
             }
         }
 
@@ -316,9 +317,16 @@ public class VirtualTime {
             ArrayList<Event> events = Student.DailyCourseRemind();
             System.out.println(events.size());
             System.out.println("明天的课程为：");
-            for(Event event:events){
-                System.out.println(event.getTime()+event.getName());
+            for (Event event : events) {
+                System.out.println(event.getTime() + event.getName());
             }
         }
+
+        /**
+         * 执行完本小时改执行的所有内容后，再次查询本小时应该在哪完成日程，更改学生所在地
+         */
+        Student.changeLocation(getTime());
+
+
     }
 }
