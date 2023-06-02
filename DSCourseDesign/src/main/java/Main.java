@@ -25,7 +25,7 @@ public class Main {
         pw.println(s);
         pw.flush();
     }
-    public static void AdminMode(Admin admin) {
+    public static void AdminMode(Admin admin) throws InterruptedException, FileNotFoundException {
         while (true) {
             String[] args = input.nextLine().split("\\s+");
             switch (args[0]) {
@@ -116,6 +116,14 @@ public class Main {
                     String newLocation = input.nextLine();
                     admin.updateCourseLocation(name1, newLocation);
                     break;
+                case "pause":
+                    pw.println("time:pause");
+                    time.pause();
+                    break;
+                case "TimeRestart":
+                    pw.println("time:TimeRestart");
+                    time.restart();
+                    break;
                 case "logout":
                     return;
             }
@@ -123,8 +131,10 @@ public class Main {
 
     }
 
-    public static void StudentMode() throws InterruptedException {
+    public static void StudentMode() throws InterruptedException, FileNotFoundException {
         TimeTable timeTable = Student.getTimeTable();
+        ArrayList<Event> events33 = timeTable.displayCourse(convertStringToDate("2023-3-26,08:00:00"), convertStringToDate("2023-3-26,9:00:00"));
+        PrintCourseEvents(events33);
         while (true) {
             String[] args = input.nextLine().split("\\s+");
             switch (args[0]) {
@@ -926,7 +936,7 @@ public class Main {
         }
     }
 
-    public static void PressInstruction() throws InterruptedException {
+    public static void PressInstruction() throws InterruptedException, FileNotFoundException {
         while (true) {
             String[] args = input.nextLine().split("\\s+");
             if (args[0].equals("login")) {
@@ -945,6 +955,8 @@ public class Main {
                     case "admin":
                         Admin admin = new Admin();
                         if (admin.login(args[2], args[3])) {
+                            pw.println("login admin success");
+                            System.out.println("管理员登录成功");
                             AdminMode(admin);
                         } else {
                             pw.println("login admin failed");
@@ -956,6 +968,10 @@ public class Main {
                 pw.println("exit");
                 System.out.println("退出成功");
                 return;
+            } else if (args[0].equals("pause")) {
+                time.pause();
+            } else if (args[0].equals("TimeRestart")) {
+                time.restart();
             }
         }
 
@@ -965,9 +981,9 @@ public class Main {
         if (!log.exists()){
             log.createNewFile();
         }
-        OutputStream out = new FileOutputStream(log);
+        OutputStream out = new FileOutputStream(log,true);
         pw = new PrintWriter(out);
-        time.TimeStart();
+        time.TimeStart(2023,3,25,18);
         PressInstruction();
         time.pause();
         System.out.println("程序结束");
